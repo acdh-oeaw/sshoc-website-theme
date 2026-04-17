@@ -1,0 +1,13 @@
+<div class="services-block-three col-lg-4 col-md-6 col-sm-6 col-xs-12">
+  <div class="inner-box">
+    <div class="content">
+      <div class="box-icon">
+        <span class="{{ fields.field_icon is defined ? fields.field_icon.content|striptags|trim : '' }}"></span>
+      </div>
+      <div class="text">{{ fields.body is defined ? fields.body.content : '' }}</div>
+      {% if fields.path is defined and fields.path.content is not empty %}
+        <a href="{{ fields.path.content|striptags|trim }}" class="read-more">{{ 'Read more ...'|t }}</a>
+      {% endif %}
+    </div>
+  </div>
+</div>

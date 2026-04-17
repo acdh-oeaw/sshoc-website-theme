@@ -1,0 +1,154 @@
+    <!-- Main Header / Header Style Four-->
+    <header class="main-header header-style-four">
+    
+    	<!-- Header Top  Two / Style Two-->
+    	<div class="header-top style-two">
+	    	<div class="container">
+	    		<div class="row">
+					<div class="col-md-8">
+	                    <!--Top Left-->
+	                    <div class="top-left">
+	                    	<ul class="links clearfix">
+		                    	<?php if (!empty(theme_get_setting('top_header_message'))): ?>
+		                    		<li><span style="color: #FFF; padding-right: 20px;"><?php print theme_get_setting('top_header_message');?></span></li>
+		                    	<?php endif; ?>
+		                    	<?php if (!empty(theme_get_setting('header_number_phone'))): ?>
+	                        		<li><a href="#"><span class="icon fa fa-phone"></span><?php print theme_get_setting('header_number_phone');?></a></li>
+	                        	<?php endif; ?>
+	                        	<?php if (!empty(theme_get_setting('header_email'))): ?>
+									<li><a href="#"><span class="icon fa fa-envelope-o"></span></a><?php print theme_get_setting('header_email');?></li>
+								<?php endif; ?>
+								 <?php global $user; if ($user->uid==0): ?>
+	                            <li><a href="/user/register" title="Join us">Join us</a></li>
+	                            <li><a href="/user" title="Join us">Log in</a></li>
+								<?php else: ?>
+								    <li><a href="/user" title="Logout">My Profile</a></li>
+									<li><a href="/user/logout" title="Logout">Logout</a></li>
+								<?php endif; ?>
+	                        </ul>
+	                    </div>
+					</div>
+                    
+                    <!--Top Right-->
+                    <div class="col-md-2">
+	                    <div class="clearfix">
+	                    	<ul class="social-icon">
+		                    	
+	                            <li><a href="https://zenodo.org/communities/sshoc/?page=1&size=20" target="_blank"><img class="zenodo-logo" src="/sites/default/files/zenodo-logo.png"></li>
+	
+
+		                    	<?php if (!empty(theme_get_setting('url_facebook'))): ?>
+	                            <li><a href="<?php print theme_get_setting('url_facebook') ?>"><span class="fa fa-facebook"></span></a></li>
+	                            <?php endif; ?>
+	                            <?php if (!empty(theme_get_setting('url_linkedin'))): ?>
+	                            <li><a href="<?php print theme_get_setting('url_linkedin') ?>"><span class="fa fa-linkedin"></span></a></li>
+	                            <?php endif; ?>
+	                            <?php if (!empty(theme_get_setting('url_twitter'))): ?>
+	                            <li><a href="<?php print theme_get_setting('url_twitter') ?>"><span class="fa fa-twitter"></span></a></li>
+	                            <?php endif; ?>
+	                            <?php if (!empty(theme_get_setting('url_google'))): ?>
+	                            <li><a href="<?php print theme_get_setting('url_google') ?>"><span class="fa fa-google"></span></a></li>
+	                            <?php endif; ?>
+	                            <?php if (!empty(theme_get_setting('url_youtube'))): ?>
+	                            <li><a href="<?php print theme_get_setting('url_youtube') ?>"><span class="fa fa-youtube"></span></a></li>
+	                            <?php endif; ?>
+	                            
+
+	                        </ul>
+	                    </div>
+                    </div>
+                    <div class="col-md-2">
+                    	<?php $block = module_invoke( 'search', 'block_view', 'search'); print render($block); ?>
+                    </div>
+                </div>
+	    	</div>
+           
+        </div>
+        <!-- Header Top Two End -->
+      
+    	<!--Header-Upper-->
+    	
+
+	    	
+        <div class="header-upper">
+        	<div class="auto-container clearfix">
+				<div class="row">
+					<div class="col-9 col-md-2 col-sm-9">
+                    	<div class="logo"><a href="/"><img src="/sites/all/themes/arcadia/logo.png" alt="" title=""></a></div>
+                	</div>
+                
+					<div class="col-3 col-md-10 col-sm-3">
+						<div class="pull-right upper-right clearfix">
+	                        <nav class="main-menu">
+	                            <div class="navbar-header">
+	                                <!-- Toggle Button -->    	
+	                                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+	                                <span class="icon-menu-square"></span>
+	                                </button>
+	                            </div>
+	                            
+	                            <div class="collapse navbar-collapse show">
+		                            <?php print render($page['globalmenu']); ?>
+		                            
+	                            </div>
+	                        </nav>
+	                        
+	                        <i id="menumibile" class="fa fa-2x fa-bars" aria-hidden="true"></i>
+						</div>
+
+                	</div>   
+            	</div>
+        	</div>
+        	
+        </div>
+
+
+    	<?php global $user;
+	    	
+	    	if ($user->uid=='1'): ?>
+	    	
+<!--
+		        <div class="header-upper">
+		        	<div class="auto-container clearfix">
+		                <div class="pull-left logo-outer">
+		                    <div class="logo"><a href="/"><img src="/sites/all/themes/arcadia/logo.png" alt="" title=""></a></div>
+		                </div>
+		                
+		                <div class="pull-right upper-right clearfix">
+		
+		                    <div class="nav-outer clearfix">
+		              
+		                        <nav class="main-menu">
+		                            <div class="navbar-header">
+		                                	
+		                                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+		                                <span class="icon-menu-square"></span>
+		                                </button>
+		                            </div>
+		                            
+		                            <div class="collapse navbar-collapse show">
+			                            <?php print render($page['globalmenu']); ?>
+			                            <i id="menumibile" class="fa fa-2x fa-bars" aria-hidden="true"></i>
+		                            </div>
+		                        </nav>
+		                        
+		                       
+		            		</div>
+		            		
+		            		
+		                </div>   
+		            </div>
+		        </div>    	
+-->
+	    <?php else: ?>
+	    	
+    	
+    	
+
+        
+        <?php endif; ?>
+        
+        <!--End Header Upper-->
+    
+    </header>
+    <!--End Main Header -->

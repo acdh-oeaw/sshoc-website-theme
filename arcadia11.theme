@@ -1,0 +1,171 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * @file
+ * Theme hooks for Arcadia 11.
+ */
+
+use Drupal\Core\Render\Element;
+use Drupal\Core\Url;
+use Drupal\node\NodeInterface;
+
+/**
+ * Implements hook_preprocess_page().
+ */
+function arcadia11_preprocess_page(array &$variables): void {
+  $variables['has_sidebar_second'] = FALSE;
+  if (!empty($variables['page']['sidebar_second'])) {
+    foreach (Element::children($variables['page']['sidebar_second']) as $child) {
+      if (!empty($variables['page']['sidebar_second'][$child])) {
+        $variables['has_sidebar_second'] = TRUE;
+        break;
+      }
+    }
+  }
+
+  $variables['top_header_message'] = (string) theme_get_setting('top_header_message');
+  $variables['services_title_block'] = (string) theme_get_setting('services_title_block');
+  $variables['news_title_block'] = (string) theme_get_setting('news_title_block');
+  $variables['footer_text_column_one'] = (string) theme_get_setting('footer_text_column_one');
+  $variables['footer_text_column_two'] = (string) theme_get_setting('footer_text_column_two');
+  $variables['footer_text_column_three'] = (string) theme_get_setting('footer_text_column_three');
+  $variables['footer_text_column_four'] = (string) theme_get_setting('footer_text_column_four');
+  $variables['text_footer'] = (string) theme_get_setting('text_footer');
+  $variables['text_footer_left'] = (string) theme_get_setting('text_footer_left');
+  $variables['text_footer_right'] = (string) theme_get_setting('text_footer_right');
+  $variables['google_analytics_code'] = (string) theme_get_setting('google_analytics_code');
+
+  $account = \Drupal::currentUser();
+  $variables['login_url'] = Url::fromRoute('user.login')->toString();
+  $variables['logout_url'] = Url::fromRoute('user.logout')->toString();
+  $variables['user_url'] = $account->isAuthenticated()
+    ? Url::fromRoute('entity.user.canonical', ['user' => $account->id()])->toString()
+    : Url::fromRoute('user.login')->toString();
+
+}
+
+/**
+ * Implements hook_preprocess_node().
+ */
+function arcadia11_preprocess_node(array &$variables): void {
+  if (empty($variables['node']) || !$variables['node'] instanceof NodeInterface) {
+    return;
+  }
+
+  $node = $variables['node'];
+  if ($node->bundle() !== 'catalogue') {
+    return;
+  }
+
+  $icon_map = [
+    22 => 'storage',
+    23 => 'sharing',
+    24 => 'datamanagement',
+    25 => 'processing',
+    26 => 'security',
+    27 => 'training',
+    28 => 'datasets',
+  ];
+
+  $variables['catalogue_icon'] = '';
+  if ($node->hasField('field_service_catalogue') && !$node->get('field_service_catalogue')->isEmpty()) {
+    $term_id = (int) $node->get('field_service_catalogue')->target_id;
+    $variables['catalogue_icon'] = $icon_map[$term_id] ?? '';
+  }
+
+  $variables['catalogue_related'] = [
+    'deliverable' => [],
+    'news' => [],
+    'event' => [],
+  ];
+
+  if ($node->isNew()) {
+    return;
+  }
+
+  $storage = \Drupal::entityTypeManager()->getStorage('node');
+  foreach (['deliverable', 'news', 'event'] as $bundle) {
+    $ids = $storage->getQuery()
+      ->accessCheck(TRUE)
+      ->condition('type', $bundle)
+      ->condition('status', 1)
+      ->condition('field_catalogue.target_id', $node->id())
+      ->sort('created', 'DESC')
+      ->execute();
+
+    if (empty($ids)) {
+      continue;
+    }
+
+    /** @var \Drupal\node\NodeInterface[] $entities */
+    $entities = $storage->loadMultiple($ids);
+    foreach ($entities as $entity) {
+      if (!$entity->access('view')) {
+        continue;
+      }
+      $variables['catalogue_related'][$bundle][] = [
+        'title' => $entity->label(),
+        'url' => $entity->toUrl()->toString(),
+      ];
+    }
+  }
+}
+
+/**
+ * Implements hook_preprocess_html().
+ */
+function arcadia11_preprocess_html(array &$variables): void {
+  $variables['google_analytics_code'] = (string) theme_get_setting('google_analytics_code');
+}
+
+/**
+ * Implements hook_form_system_theme_settings_alter().
+ */
+function arcadia11_form_system_theme_settings_alter(array &$form, \Drupal\Core\Form\FormStateInterface $form_state): void {
+  $form['arcadia11'] = [
+    '#type' => 'details',
+    '#title' => t('Arcadia 11 settings'),
+    '#open' => TRUE,
+  ];
+
+  $form['arcadia11']['top_header_message'] = [
+    '#type' => 'textfield',
+    '#title' => t('Top header message'),
+    '#default_value' => theme_get_setting('top_header_message'),
+  ];
+
+  $form['arcadia11']['google_analytics_code'] = [
+    '#type' => 'textarea',
+    '#title' => t('Google Analytics code snippet'),
+    '#default_value' => theme_get_setting('google_analytics_code'),
+  ];
+
+  foreach ([
+    'services_title_block' => 'Services block title',
+    'news_title_block' => 'News block title',
+    'text_footer' => 'Footer headline text',
+    'text_footer_left' => 'Footer bottom left',
+    'text_footer_right' => 'Footer bottom right',
+  ] as $key => $label) {
+    $form['arcadia11'][$key] = [
+      '#type' => 'textfield',
+      '#title' => t($label),
+      '#default_value' => theme_get_setting($key),
+    ];
+  }
+
+  foreach ([
+    'footer_text_column_one' => 'Footer column one',
+    'footer_text_column_two' => 'Footer column two',
+    'footer_text_column_three' => 'Footer column three',
+    'footer_text_column_four' => 'Footer column four',
+  ] as $key => $label) {
+    $form['arcadia11'][$key] = [
+      '#type' => 'textarea',
+      '#title' => t($label),
+      '#default_value' => theme_get_setting($key),
+    ];
+  }
+}

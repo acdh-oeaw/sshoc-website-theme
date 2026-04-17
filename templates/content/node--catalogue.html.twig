@@ -1,0 +1,77 @@
+{% set classes = [
+  'node',
+  'node--type-catalogue',
+  view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
+] %}
+
+<article{{ attributes.addClass(classes) }}>
+  <div class="row">
+    <div class="col-10">
+      {% if not page %}
+        <h2{{ title_attributes }}><a href="{{ url }}">{{ label }}</a></h2>
+      {% endif %}
+    </div>
+
+    <div class="col-2">
+      {% if catalogue_icon %}
+        <img alt="{{ catalogue_icon }}" src="/sites/default/files/{{ catalogue_icon }}.png">
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="content"{{ content_attributes }}>
+    {{ content|without('field_catalogue', 'field_file', 'links', 'comments') }}
+
+    {% if catalogue_related.deliverable is not empty %}
+      <div class="field field-label-above">
+        <div class="field-label">{{ 'SSHOC Resources:'|t }}</div>
+        <div class="field-items">
+          <div class="field-item even">
+            <div class="node node-deliverable">
+              {% for item in catalogue_related.deliverable %}
+                <a href="{{ item.url }}">{{ item.title }}</a>{% if not loop.last %}<br>{% endif %}
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+    {% if content.field_file is defined %}
+      {{ content.field_file }}
+    {% endif %}
+
+    {% if page and catalogue_related.news is not empty %}
+      <div class="field field-label-above">
+        <div class="field-label">{{ 'SSHOC News:'|t }}</div>
+        <div class="field-items">
+          <div class="field-item even">
+            <div class="node node-news">
+              {% for item in catalogue_related.news %}
+                <a href="{{ item.url }}">{{ item.title }}</a>{% if not loop.last %}<br>{% endif %}
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+    {% if page and catalogue_related.event is not empty %}
+      <div class="field field-label-above">
+        <div class="field-label">{{ 'SSHOC Events:'|t }}</div>
+        <div class="field-items">
+          <div class="field-item even">
+            <div class="node node-event">
+              {% for item in catalogue_related.event %}
+                <a href="{{ item.url }}">{{ item.title }}</a>{% if not loop.last %}<br>{% endif %}
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+
+  {% if content.links is defined %}{{ content.links }}{% endif %}
+  {% if content.comments is defined %}{{ content.comments }}{% endif %}
+</article>

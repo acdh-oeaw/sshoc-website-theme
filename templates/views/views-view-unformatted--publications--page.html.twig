@@ -1,0 +1,10 @@
+{% if title %}
+  <h2 class="group-title">{{ title }}</h2>
+  <br>
+{% endif %}
+
+{% for row in rows %}
+  <div{{ row.attributes }}>
+    {{ row.content }}
+  </div>
+{% endfor %}

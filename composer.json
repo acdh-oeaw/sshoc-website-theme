@@ -1,0 +1,16 @@
+{
+  "name": "acdharcadia11",
+  "description": "Arcadia 11 theme SSHOC.",
+  "type": "drupal-theme",
+  "license": "GPL-2.0-or-later",
+  "homepage": "https://sshoc.eu/",  
+  "require": {
+    "drupal/core": "^11",
+    "drupal/classy": "^2.0"
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-main": "1.x-dev"
+    }
+  }
+}

@@ -1,0 +1,47 @@
+{% set region = configuration.region|default('') %}
+
+{% if region == 'globalmenu' %}
+  {{ content }}
+
+{% elseif region == 'news' %}
+  <section class="news-section">
+    <div class="auto-container">
+      <div class="sec-title">
+        <h2{{ title_attributes }}>{{ label }}</h2>
+      </div>
+      <div class="row clearfix">{{ content }}</div>
+    </div>
+  </section>
+
+{% elseif region == 'partners' %}
+  <section class="partner-section">
+    <div class="auto-container">
+      <div class="sec-title"><h2{{ title_attributes }}>{{ label }}</h2></div>
+      <div class="partner-outer"><ul class="partner-carousel owl-carousel owl-theme">{{ content }}</ul></div>
+    </div>
+  </section>
+
+{% elseif region == 'testimonials' %}
+  <section class="testimonial-section">
+    <div class="auto-container">
+      <div class="sec-title-two"><h2{{ title_attributes }}>{{ label }}</h2></div>
+      {{ content }}
+    </div>
+  </section>
+
+{% elseif region == 'social_widget' %}
+  <section class="twitter-section">
+    <div class="auto-container">
+      <div class="sec-title"><h2{{ title_attributes }}>{{ label }}</h2></div>
+      {{ content }}
+    </div>
+  </section>
+
+{% else %}
+  <div{{ attributes }}>
+    {{ title_prefix }}
+    {% if label %}<h2{{ title_attributes }}>{{ label }}</h2>{% endif %}
+    {{ title_suffix }}
+    <div{{ content_attributes }}>{{ content }}</div>
+  </div>
+{% endif %}

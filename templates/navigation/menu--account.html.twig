@@ -1,0 +1,10 @@
+{% if logged_in %}
+  <ul class="autentication clearfix">
+    <li><a class="logged" href="/user" title="{{ 'My Area'|t }}">{{ 'My Area'|t }}</a></li>
+    <li class="ml-1"><a class="logged" href="/user/logout" title="{{ 'Logout'|t }}"><i class="fa fa-sign-out" aria-hidden="true"></i></a></li>
+  </ul>
+{% else %}
+  <ul class="autentication clearfix">
+    <li><a class="btn-terziario" href="/user" title="{{ 'Join us'|t }}">{{ 'Sign in'|t }} <i class="fa fa-user" aria-hidden="true"></i></a></li>
+  </ul>
+{% endif %}

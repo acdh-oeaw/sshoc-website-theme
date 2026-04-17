@@ -1,0 +1,56 @@
+{% set classes = [
+  'node',
+  'node--type-event',
+  view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
+] %}
+
+<article{{ attributes.addClass(classes) }}>
+  {% if view_mode == 'teaser' %}
+    <div class="news-block-two">
+      {% if content.field_image is defined %}
+        <a href="{{ url }}">{{ content.field_image }}</a>
+      {% endif %}
+
+      <div class="inner-box">
+        <h3{{ title_attributes }}><a href="{{ url }}">{{ label }}</a></h3>
+        {{ content|without('field_image', 'links', 'comments') }}
+      </div>
+    </div>
+  {% else %}
+    <div class="post-thumbnail">
+      <div class="event-info clearfix">
+        {% if content.field_submission_date is defined or content.field_event_date is defined %}
+          <div class="date clearfix">
+            <i class="fa fa-calendar"></i>
+            {{ content.field_submission_date is defined ? content.field_submission_date : content.field_event_date }}
+          </div>
+        {% endif %}
+      </div>
+
+      {% if content.field_image is defined %}
+        {{ content.field_image }}
+      {% endif %}
+
+      <div class="items">
+        {% if content.field_document is defined %}
+          <div class="item-attach">
+            <div class="document clearfix"><span><i class="fa fa-file"></i></span><span>{{ content.field_document }}</span></div>
+          </div>
+        {% endif %}
+
+        {% if content.field_attachment is defined %}
+          <div class="item-attach">
+            <div class="attach clearfix"><span><i class="fa fa-link"></i></span><span>{{ content.field_attachment }}</span></div>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="content"{{ content_attributes }}>
+      {{ content|without('field_submission_date', 'field_event_date', 'field_image', 'field_document', 'field_attachment', 'links', 'comments') }}
+    </div>
+
+    {% if content.links is defined %}{{ content.links }}{% endif %}
+    {% if content.comments is defined %}{{ content.comments }}{% endif %}
+  {% endif %}
+</article>

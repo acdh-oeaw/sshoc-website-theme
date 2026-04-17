@@ -1,0 +1,48 @@
+global:
+  css:
+    theme:
+      css/bootstrap.css: {}
+      css/animate.css: {}
+      css/font-awesome.css: {}
+      css/linearicons.css: {}
+      css/hover.css: {}
+      css/jquery.fancybox.min.css: {}
+      css/owl.css: {}
+      # plugins/revolution/css/settings.css: {}
+      # plugins/revolution/css/layers.css: {}
+      # plugins/revolution/css/navigation.css: {}
+      css/text-rotate.css: {}
+      css/materialdesignicons.min.css: {}
+      css/pretty-checkbox.min.css: {}
+      css/style.css: {}
+      css/responsive.css: {}
+      css/custom.css: {}
+
+  js:
+    js/jquery-legacy-compat.js: {}
+    # plugins/revolution/js/jquery.themepunch.revolution.min.js: { minified: true }
+    # plugins/revolution/js/jquery.themepunch.tools.min.js: { minified: true }
+    # plugins/revolution/js/extensions/revolution.extension.actions.min.js: { minified: true }
+    # plugins/revolution/js/extensions/revolution.extension.carousel.min.js: { minified: true }
+    # plugins/revolution/js/extensions/revolution.extension.kenburn.min.js: { minified: true }
+    # plugins/revolution/js/extensions/revolution.extension.layeranimation.min.js: { minified: true }
+    # plugins/revolution/js/extensions/revolution.extension.migration.min.js: { minified: true }
+    # plugins/revolution/js/extensions/revolution.extension.navigation.min.js: { minified: true }
+    # plugins/revolution/js/extensions/revolution.extension.parallax.min.js: { minified: true }
+    # plugins/revolution/js/extensions/revolution.extension.slideanims.min.js: { minified: true }
+    # plugins/revolution/js/extensions/revolution.extension.video.min.js: { minified: true }
+    js/jquery.countdown.min.js: { minified: true }
+    js/main-slider-script.js: {}
+    js/jquery.fancybox.js: {}
+    js/jquery-ui.js: {}
+    js/owl.js: {}
+    js/appear.js: {}
+    js/wow.js: {}
+    js/script.js: {}
+    js/skrollr.min.js: { minified: true }
+    js/arcadia11.js: {}
+
+  dependencies:
+    - core/jquery
+    - core/drupal
+    - core/once

@@ -1,0 +1,59 @@
+{% set classes = [
+  'node',
+  'node--type-scientific-publications',
+  view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
+] %}
+
+<article{{ attributes.addClass(classes) }}>
+  {% if view_mode == 'teaser' %}
+    <div class="news-block-two">
+      {% if content.field_image is defined %}
+        {{ content.field_image }}
+      {% endif %}
+
+      <div class="inner-box">
+        <h3{{ title_attributes }}><a href="{{ url }}">{{ label }}</a></h3>
+        {{ content|without('field_image', 'links', 'comments') }}
+      </div>
+    </div>
+  {% else %}
+    <div class="post-thumbnail">
+      <div class="event-info clearfix">
+        {% if content.field_date is defined %}
+          <div class="date clearfix"><i class="fa fa-calendar"></i>{{ content.field_date }}</div>
+        {% endif %}
+      </div>
+
+      {% if content.field_image is defined %}
+        {{ content.field_image }}
+      {% endif %}
+
+      <div class="items">
+        {% if content.field_source is defined %}
+          <div class="item-attach">
+            <div class="document clearfix"><span class="icon icon-papers"></span><span>{{ content.field_source }}</span></div>
+          </div>
+        {% endif %}
+
+        {% if content.field_url is defined %}
+          <div class="item-attach">
+            <div class="document clearfix"><span class="icon icon-network"></span><span>{{ content.field_url }}</span></div>
+          </div>
+        {% endif %}
+
+        {% if content.field_file_attachment is defined %}
+          <div class="item-attach">
+            <div class="attach clearfix"><span><i class="fa fa-file"></i></span><span>{{ content.field_file_attachment }}</span></div>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="content"{{ content_attributes }}>
+      {{ content|without('field_date', 'field_image', 'field_source', 'field_url', 'field_file_attachment', 'field_document', 'field_attachment', 'links', 'comments') }}
+    </div>
+
+    {% if content.links is defined %}{{ content.links }}{% endif %}
+    {% if content.comments is defined %}{{ content.comments }}{% endif %}
+  {% endif %}
+</article>

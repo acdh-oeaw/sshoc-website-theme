@@ -1,0 +1,19 @@
+{% set collapse_id = 'collapse-members-' ~ (view.dom_id|default('default')) %}
+
+<div class="accordion">
+  {% if title %}
+    <h3>{{ title }}</h3>
+  {% endif %}
+</div>
+
+<a class="btn btn-primary" data-toggle="collapse" href="#{{ collapse_id }}" role="button" aria-expanded="false" aria-controls="{{ collapse_id }}">
+  {{ 'View all members'|t }}
+</a>
+
+<div class="collapse" id="{{ collapse_id }}">
+  {% for row in rows %}
+    <div{{ row.attributes }}>
+      {{ row.content }}
+    </div>
+  {% endfor %}
+</div>

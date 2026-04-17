@@ -1,0 +1,40 @@
+name: Arcadia 11
+type: theme
+description: 'Direct Drupal 11 port of the legacy Arcadia Drupal 7 theme assets and layout.'
+core_version_requirement: '^11'
+base theme: classy
+logo: logo.svg
+
+libraries:
+  - arcadia11/global
+
+regions:
+  top_header: 'Top Header'
+  header: 'Header'
+  globalmenu: 'Global Menu'
+  breadcrumb: 'Breadcrumb'
+  slider: 'Slider'
+  slider2: 'Slider Two'
+  higlight: 'Highlight'
+  abstract: 'Abstract'
+  parallax: 'Parallax'
+  section_one: 'Section One'
+  section_two: 'Section Two'
+  section_three: 'Section Three'
+  section_four: 'Section Four'
+  section_five: 'Section Five'
+  section_six: 'Section Six'
+  content: 'Content'
+  services: 'Services'
+  cases: 'Cases'
+  news: 'News'
+  events: 'Events'
+  social_widget: 'Social Widget'
+  newsletter: 'Newsletter'
+  partners: 'Partners'
+  testimonials: 'Testimonials'
+  sidebar_first: 'Sidebar first'
+  sidebar_second: 'Sidebar second'
+  rss: 'RSS'
+  top_footer: 'Top Footer'
+  footer: 'Footer'

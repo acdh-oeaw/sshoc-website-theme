@@ -1,0 +1,29 @@
+{% set classes = [
+  'node',
+  'node--type-q-a-with-researches',
+  view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
+] %}
+
+<article{{ attributes.addClass(classes) }}>
+  {% if view_mode == 'teaser' %}
+    <div class="row">
+      {% if content.field_image is defined %}
+        <div class="col col-md-4">{{ content.field_image }}</div>
+      {% endif %}
+
+      <div class="col col-md-8"{{ content_attributes }}>
+        {{ title_prefix }}
+        <h2{{ title_attributes }}><a href="{{ url }}">{{ label }}</a></h2>
+        {{ title_suffix }}
+        {{ content|without('field_image', 'links', 'comments') }}
+      </div>
+    </div>
+  {% else %}
+    <div class="content"{{ content_attributes }}>
+      {{ content|without('links', 'comments') }}
+    </div>
+
+    {% if content.links is defined %}{{ content.links }}{% endif %}
+    {% if content.comments is defined %}{{ content.comments }}{% endif %}
+  {% endif %}
+</article>

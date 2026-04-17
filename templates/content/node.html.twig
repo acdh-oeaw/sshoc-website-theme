@@ -1,0 +1,47 @@
+{% set classes = [
+  'node',
+  'node--type-' ~ node.bundle|clean_class,
+  node.isPromoted() ? 'node--promoted',
+  node.isSticky() ? 'node--sticky',
+  not node.isPublished() ? 'node--unpublished',
+  view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
+] %}
+
+<article{{ attributes.addClass(classes) }}>
+  {% if view_mode == 'teaser' %}
+    <div class="row">
+      {% if content.field_image is defined %}
+        <div class="col-md-4">
+          {{ content.field_image }}
+        </div>
+      {% endif %}
+
+      <div class="col col-md-8"{{ content_attributes }}>
+        {{ title_prefix }}
+        {% if not page %}
+          <h2{{ title_attributes }}><a href="{{ url }}">{{ label }}</a></h2>
+        {% endif %}
+        {{ title_suffix }}
+        {{ content|without('field_image', 'links', 'comments') }}
+      </div>
+    </div>
+  {% else %}
+    {{ title_prefix }}
+    {% if not page %}
+      <h2{{ title_attributes }}><a href="{{ url }}">{{ label }}</a></h2>
+    {% endif %}
+    {{ title_suffix }}
+
+    <div class="content clearfix"{{ content_attributes }}>
+      {{ content|without('links', 'comments') }}
+    </div>
+
+    {% if content.links is defined %}
+      <div class="link-wrapper">{{ content.links }}</div>
+    {% endif %}
+
+    {% if content.comments is defined %}
+      {{ content.comments }}
+    {% endif %}
+  {% endif %}
+</article>

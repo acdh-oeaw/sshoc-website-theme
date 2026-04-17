@@ -1,0 +1,43 @@
+{% set classes = [
+  'node',
+  'node--type-video',
+  view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
+] %}
+
+<article{{ attributes.addClass(classes) }}>
+  {% if view_mode == 'teaser' %}
+    <div class="publications-teaser video">
+      <div class="image">
+        <div class="embed-responsive embed-responsive-16by9">
+          {% if content.field_video_embed is defined %}
+            {{ content.field_video_embed }}
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="content">
+        <h2{{ title_attributes }}>{{ label }}</h2>
+        {{ content|without('field_video_embed', 'field_link_video', 'field_tags_video', 'field_date', 'links', 'comments') }}
+      </div>
+
+      <div class="footer">
+        {% if content.field_date is defined %}
+          <p><span class="icon-calendar-31"></span><span>{{ content.field_date }}</span></p>
+        {% endif %}
+      </div>
+    </div>
+  {% else %}
+    {{ title_prefix }}
+    {% if not page %}
+      <h2{{ title_attributes }}><a href="{{ url }}">{{ label }}</a></h2>
+    {% endif %}
+    {{ title_suffix }}
+
+    <div class="content"{{ content_attributes }}>
+      {{ content|without('links', 'comments') }}
+    </div>
+
+    {% if content.links is defined %}{{ content.links }}{% endif %}
+    {% if content.comments is defined %}{{ content.comments }}{% endif %}
+  {% endif %}
+</article>
