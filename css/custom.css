@@ -1686,3 +1686,8 @@ div.secondbackgroundImage .training-box {
     margin-top: 24px;
   }
 }
+
+
+#block-arcadia11-site-branding > div > img {
+    max-width: 150px;
+}
