@@ -9,8 +9,10 @@
                 {% if top_header_message %}
                   <li><span>{{ top_header_message }}</span></li>
                 {% endif %}
-                {{ page.top_header }}
               </ul>
+              {% if page.top_header %}
+                <div class="top-header-region">{{ page.top_header }}</div>
+              {% endif %}
             </div>
           </div>
           <div class="col-md-4">

@@ -763,25 +763,212 @@ margin-top: 0;
 
 
 
-.vers2 .search-box
-{
-	background-color: transparent;
+.main-header.header-style-four.vers2 .header-top.style-two .search-box {
+  background: #fff;
+  border-radius: 999px;
+  width: 100%;
+  max-width: 370px;
+  height: 40px;
+  margin: 0;
+  float: none;
+  display: flex;
+  align-items: center;
+  padding: 0 8px 0 14px;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.08);
 }
 
-.vers2 .search-box input
-{
-	border-radius: 30px 0 0 30px;
+.main-header.header-style-four.vers2 .header-top.style-two .search-box input {
+  border: 0;
+  background: transparent;
+  border-radius: 999px;
+  color: #4e5560;
+  font-size: 0.95rem;
+  height: 38px;
+  line-height: 38px;
+  margin: 0;
+  padding: 0;
+  width: 100%;
 }
 
-.vers2 .search-box button
-{
-		border-radius: 0 30px 30px 0;
-		background: white;
+.main-header.header-style-four.vers2 .header-top.style-two .search-box input::placeholder {
+  color: #9aa1aa;
 }
 
-.vers2 .search-box button:before
-{
-	color: #0085CA !important;
+.main-header.header-style-four.vers2 .header-top.style-two .search-box button {
+  background: transparent;
+  border: 0;
+  border-radius: 50%;
+  width: 32px;
+  min-width: 32px;
+  height: 32px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.main-header.header-style-four.vers2 .header-top.style-two .search-box button::before {
+  color: #0085CA !important;
+  font-size: 18px;
+  margin: 0;
+  padding: 0;
+}
+
+/* Drupal core search block in header top (when using Search form block directly). */
+.main-header.header-style-four.vers2 .header-top.style-two .col-md-4 .block-search {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.main-header.header-style-four.vers2 .header-top.style-two .col-md-4 #search-block-form {
+  width: 100%;
+  max-width: 370px;
+  height: 40px;
+  margin: 0 !important;
+  background: #fff;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 8px 0 14px;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.08);
+}
+
+.main-header.header-style-four.vers2 .header-top.style-two #search-block-form {
+  width: 100%;
+  max-width: 370px;
+  height: 40px;
+  margin: 0 !important;
+  background: #fff;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 8px 0 14px;
+}
+
+.main-header.header-style-four.vers2 .header-top.style-two .col-md-4 #search-block-form .form-item,
+.main-header.header-style-four.vers2 .header-top.style-two .col-md-4 #search-block-form .js-form-item {
+  margin: 0 !important;
+  flex: 1 1 auto;
+}
+
+.main-header.header-style-four.vers2 .header-top.style-two #search-block-form .form-item,
+.main-header.header-style-four.vers2 .header-top.style-two #search-block-form .js-form-item {
+  margin: 0 !important;
+  flex: 1 1 auto;
+}
+
+.main-header.header-style-four.vers2 .header-top.style-two .col-md-4 #search-block-form label {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+.main-header.header-style-four.vers2 .header-top.style-two #search-block-form label {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+.main-header.header-style-four.vers2 .header-top.style-two .col-md-4 #search-block-form input[type="search"],
+.main-header.header-style-four.vers2 .header-top.style-two .col-md-4 #search-block-form .form-search {
+  border: 0 !important;
+  background: transparent !important;
+  border-radius: 999px !important;
+  box-shadow: none !important;
+  outline: 0 !important;
+  color: #4e5560;
+  font-size: 0.95rem;
+  width: 100% !important;
+  height: 38px !important;
+  line-height: 38px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.main-header.header-style-four.vers2 .header-top.style-two #search-block-form input[type="search"],
+.main-header.header-style-four.vers2 .header-top.style-two #search-block-form .form-search {
+  border: 0 !important;
+  background: transparent !important;
+  border-radius: 999px !important;
+  box-shadow: none !important;
+  outline: 0 !important;
+  color: #4e5560;
+  font-size: 0.95rem;
+  width: 100% !important;
+  height: 38px !important;
+  line-height: 38px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.main-header.header-style-four.vers2 .header-top.style-two .col-md-4 #search-block-form input[type="search"]::placeholder,
+.main-header.header-style-four.vers2 .header-top.style-two .col-md-4 #search-block-form .form-search::placeholder {
+  color: #9aa1aa;
+}
+
+.main-header.header-style-four.vers2 .header-top.style-two .col-md-4 #search-block-form .form-actions,
+.main-header.header-style-four.vers2 .header-top.style-two .col-md-4 #search-block-form .js-form-actions {
+  margin: 0 !important;
+}
+
+.main-header.header-style-four.vers2 .header-top.style-two #search-block-form .form-actions,
+.main-header.header-style-four.vers2 .header-top.style-two #search-block-form .js-form-actions {
+  margin: 0 !important;
+}
+
+.main-header.header-style-four.vers2 .header-top.style-two .col-md-4 #search-block-form input[type="submit"],
+.main-header.header-style-four.vers2 .header-top.style-two .col-md-4 #search-block-form .form-submit {
+  width: 32px !important;
+  min-width: 32px !important;
+  height: 32px !important;
+  border: 0 !important;
+  border-radius: 50% !important;
+  background-color: transparent !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24'%3E%3Cpath fill='%230085CA' d='M10 2a8 8 0 105.293 14.293l4.707 4.707l1.414-1.414l-4.707-4.707A8 8 0 0010 2m0 2a6 6 0 110 12a6 6 0 010-12'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  background-size: 18px 18px !important;
+  box-shadow: none !important;
+  text-indent: -9999px !important;
+  overflow: hidden !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  cursor: pointer;
+}
+
+.main-header.header-style-four.vers2 .header-top.style-two #search-block-form input[type="submit"],
+.main-header.header-style-four.vers2 .header-top.style-two #search-block-form .form-submit {
+  width: 32px !important;
+  min-width: 32px !important;
+  height: 32px !important;
+  border: 0 !important;
+  border-radius: 50% !important;
+  background-color: transparent !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24'%3E%3Cpath fill='%230085CA' d='M10 2a8 8 0 105.293 14.293l4.707 4.707l1.414-1.414l-4.707-4.707A8 8 0 0010 2m0 2a6 6 0 110 12a6 6 0 010-12'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+  background-size: 18px 18px !important;
+  box-shadow: none !important;
+  text-indent: -9999px !important;
+  overflow: hidden !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  cursor: pointer;
 }
 
 
@@ -991,7 +1178,43 @@ div.secondbackgroundImage .training-box {
 
 /* SSHOC-like primary menu layout (desktop). */
 .main-header.header-style-four.vers2 .header-top.style-two {
-  display: none;
+  display: block;
+}
+
+.main-header.header-style-four.vers2 .header-top .top-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.main-header.header-style-four.vers2 .header-top .top-left .links {
+  margin: 0;
+}
+
+.main-header.header-style-four.vers2 .header-top .top-left .links li:last-child {
+  border-right: 0;
+  margin-right: 0;
+}
+
+.main-header.header-style-four.vers2 .header-top .top-left .top-header-region {
+  display: flex;
+  align-items: center;
+  margin: 0;
+  color: inherit;
+}
+
+.main-header.header-style-four.vers2 .header-top .top-left .top-header-region .block {
+  margin: 0;
+}
+
+.main-header.header-style-four.vers2 .header-top .top-left .top-header-region .block-page-title-block h1,
+.main-header.header-style-four.vers2 .header-top .top-left .top-header-region .page-title {
+  margin: 0;
+  padding: 0;
+  font-size: 1rem;
+  line-height: 1.2;
+  color: inherit;
 }
 
 .main-header.header-style-four.vers2 .header-upper {
@@ -1069,8 +1292,8 @@ div.secondbackgroundImage .training-box {
   white-space: nowrap;
 }
 
-.main-header.header-style-four.vers2 .main-menu .navigation > li > ul {
-  width: 420px;
+.main-header.header-style-four.vers2 #block-arcadia11-main-menu .navigation > li > ul {
+  width: 230px;
   background: #efefef;
   border-top: 4px solid #ff9e1b;
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.14);
@@ -1078,8 +1301,8 @@ div.secondbackgroundImage .training-box {
 
 .main-header.header-style-four.vers2 .main-menu .navigation > li > ul > li > a,
 .main-header.header-style-four.vers2 .main-menu .navigation > li > ul > li > .nolink {
-  padding: 18px 22px;
-  font-size: 1.1rem;
+  padding: 9px 25px;
+  font-size: 15px;
   font-weight: 400;
   line-height: 1.35;
   color: #242424;
@@ -1689,5 +1912,5 @@ div.secondbackgroundImage .training-box {
 
 
 #block-arcadia11-site-branding > div > img {
-    max-width: 150px;
+    max-width: 170px;
 }
