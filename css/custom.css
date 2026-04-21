@@ -1583,14 +1583,17 @@ div.secondbackgroundImage .training-box {
 /* SSHOC subpages: use original header variant (top strip + white nav bar). */
 .main-header.header-style-four.vers2:not(.front) {
   position: relative;
-  background: #00558c url("/themes/contrib/arcadia11/images/background/1.jpg") center top no-repeat;
-  background-size: cover;
+  background-color: #00558c;
+  background-image: linear-gradient(rgba(0, 94, 139, 0.8), rgba(0, 94, 139, 0.8)), url("../images/slider2.png");
+  background-position: center center, center center;
+  background-repeat: no-repeat, no-repeat;
+  background-size: cover, cover;
   padding-bottom: 24px;
 }
 
 .main-header.header-style-four.vers2:not(.front) .header-top.style-two {
   display: block !important;
-  background-color: rgba(0, 85, 140, 0.72);
+  background-color: transparent !important;
   color: #ffffff;
   padding: 12px 0;
   border-bottom: 0;
