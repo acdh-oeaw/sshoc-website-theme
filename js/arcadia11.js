@@ -408,6 +408,10 @@
         });
       });
 
+      once('arcadia11-header-logo-class', '#block-arcadia11-branding img, .main-header .logo img', context).forEach(function (logoImg) {
+        logoImg.classList.add('arcadia-header-logo');
+      });
+
       if (typeof $.fn.owlCarousel === 'function') {
         once('arcadia11-partner-carousel', '.partner-carousel-v2', context).forEach(function (carousel) {
           var $carousel = $(carousel);

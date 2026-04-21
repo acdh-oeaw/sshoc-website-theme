@@ -982,9 +982,10 @@ div.secondbackgroundImage .training-box {
 /* Keep the Arcadia header logo at a fixed size. */
 .main-header .logo img,
 .sticky-header .logo img,
-#block-arcadia11-branding img {
-  width: 170px !important;
-  max-width: 170px !important;
+#block-arcadia11-branding img,
+.arcadia-header-logo {
+  width: 150px !important;
+  max-width: 150px !important;
   height: auto !important;
 }
 
@@ -997,7 +998,11 @@ div.secondbackgroundImage .training-box {
   margin: 0 !important;
   padding: 0 24px;
   background: #ffffff;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: none;
+}
+
+.header-upper {
+  box-shadow: none !important;
 }
 
 .main-header.header-style-four.vers2 .header-upper .row {
@@ -1237,7 +1242,7 @@ div.secondbackgroundImage .training-box {
 .partner-bootstrap-carousel .partner-logo-cell img {
   width: auto !important;
   height: auto !important;
-  max-height: 86px;
+  max-height: 200px;
   max-width: 100%;
   object-fit: contain;
 }
@@ -1440,7 +1445,7 @@ div.secondbackgroundImage .training-box {
   margin: 0 !important;
   padding: 0 18px;
   background: #ffffff;
-  box-shadow: 0 2px 14px rgba(0, 0, 0, 0.12);
+  box-shadow: none;
   z-index: 9999;
 }
 
