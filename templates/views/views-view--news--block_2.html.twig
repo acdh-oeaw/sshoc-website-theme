@@ -1,0 +1,15 @@
+<div class="sidebar-widget arcadia-news-sidebar">
+  <div class="sidebar-title">
+    <h2>{{ title ?: 'News' }}</h2>
+  </div>
+
+  {% if rows %}
+    {{ rows }}
+  {% elseif empty %}
+    {{ empty }}
+  {% endif %}
+
+  {% if pager %}
+    {{ pager }}
+  {% endif %}
+</div>

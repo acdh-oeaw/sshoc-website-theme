@@ -6,12 +6,12 @@
 
 <article{{ attributes.addClass(classes) }}>
   {% if view_mode == 'teaser' %}
-    <div class="row">
+    <div class="row news-teaser">
       {% if content.field_image is defined %}
-        <div class="col col-md-4">{{ content.field_image }}</div>
+        <div class="col col-md-4 news-teaser__media">{{ content.field_image }}</div>
       {% endif %}
 
-      <div class="col col-md-8"{{ content_attributes }}>
+      <div class="col col-md-8 news-teaser__content"{{ content_attributes }}>
         {{ title_prefix }}
         <h2{{ title_attributes }}><a href="{{ url }}">{{ label }}</a></h2>
         {{ title_suffix }}
@@ -19,9 +19,41 @@
       </div>
     </div>
   {% else %}
-    <div class="content"{{ content_attributes }}>
-      {{ content|without('links', 'comments') }}
+    <div class="post-thumbnail news-full__header">
+      {% if content.field_image is defined %}
+        <div class="news-full__image">
+          {{ content.field_image }}
+        </div>
+      {% endif %}
+
+      {% if news_display_date %}
+        <div class="event-info clearfix news-full__meta">
+          <div class="date clearfix news-full__date">
+            <span class="news-full__date-label">Date:</span>
+            <span class="news-full__date-value">{{ news_display_date }}</span>
+          </div>
+        </div>
+      {% endif %}
     </div>
+
+    <div class="content news-full__content"{{ content_attributes }}>
+      {{ content|without('field_image', 'field_date', 'links', 'comments') }}
+    </div>
+
+    {% if news_social_links %}
+      <div class="social-share">
+        <ul>
+          {% for item in news_social_links %}
+            <li class="{{ item.item_class }}">
+              <a href="{{ item.href }}" class="{{ item.link_class }}" title="{{ item.title }}" target="_blank" rel="noopener noreferrer">
+                <img src="{{ item.icon_path }}" alt="" loading="lazy" width="32" height="32" />
+                <span class="visually-hidden">{{ item.label }}</span>
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
 
     {% if content.links is defined %}{{ content.links }}{% endif %}
     {% if content.comments is defined %}{{ content.comments }}{% endif %}

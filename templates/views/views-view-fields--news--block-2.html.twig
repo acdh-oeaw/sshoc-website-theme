@@ -1,0 +1,17 @@
+{% if fields.title is defined %}
+  <div class="arcadia-news-sidebar__item-title">
+    {{ fields.title.content }}
+  </div>
+{% endif %}
+
+{% if fields.body is defined %}
+  <div class="arcadia-news-sidebar__summary">
+    {{ fields.body.content }}
+  </div>
+{% endif %}
+
+{% if fields.nothing is defined %}
+  <div class="arcadia-news-sidebar__separator">
+    {{ fields.nothing.content }}
+  </div>
+{% endif %}

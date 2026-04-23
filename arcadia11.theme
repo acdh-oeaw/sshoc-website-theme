@@ -10,11 +10,13 @@ declare(strict_types=1);
 use Drupal\Core\Render\Element;
 use Drupal\Core\Url;
 use Drupal\node\NodeInterface;
+use Drupal\views\Views;
 
 /**
  * Implements hook_preprocess_page().
  */
 function arcadia11_preprocess_page(array &$variables): void {
+  $variables['page_header_title'] = '';
   $variables['has_sidebar_second'] = FALSE;
   if (!empty($variables['page']['sidebar_second'])) {
     foreach (Element::children($variables['page']['sidebar_second']) as $child) {
@@ -22,6 +24,25 @@ function arcadia11_preprocess_page(array &$variables): void {
         $variables['has_sidebar_second'] = TRUE;
         break;
       }
+    }
+  }
+
+  if (!$variables['has_sidebar_second'] && arcadia11_has_news_sidebar_context()) {
+    $news_sidebar = arcadia11_build_news_sidebar();
+    if ($news_sidebar !== []) {
+      $variables['page']['sidebar_second']['arcadia11_news_sidebar'] = $news_sidebar;
+      $variables['has_sidebar_second'] = TRUE;
+    }
+  }
+
+  $route_match = \Drupal::routeMatch();
+  if ($route_match->getRouteName() === 'view.news.page') {
+    $variables['page_header_title'] = 'News';
+  }
+  else {
+    $node = $route_match->getParameter('node');
+    if ($node instanceof NodeInterface && $node->bundle() === 'news') {
+      $variables['page_header_title'] = $node->label();
     }
   }
 
@@ -47,6 +68,37 @@ function arcadia11_preprocess_page(array &$variables): void {
 }
 
 /**
+ * Builds the news sidebar view for the /news page.
+ */
+function arcadia11_build_news_sidebar(): array {
+  $view = Views::getView('news');
+  if (!$view || !$view->access('block_2')) {
+    return [];
+  }
+
+  return [
+    '#type' => 'container',
+    '#attributes' => [
+      'class' => ['arcadia-news-sidebar-container'],
+    ],
+    'content' => $view->buildRenderable('block_2'),
+  ];
+}
+
+/**
+ * Determines whether the current route should show the news sidebar.
+ */
+function arcadia11_has_news_sidebar_context(): bool {
+  $route_match = \Drupal::routeMatch();
+  if ($route_match->getRouteName() === 'view.news.page') {
+    return TRUE;
+  }
+
+  $node = $route_match->getParameter('node');
+  return $node instanceof NodeInterface && $node->bundle() === 'news';
+}
+
+/**
  * Implements hook_preprocess_node().
  */
 function arcadia11_preprocess_node(array &$variables): void {
@@ -55,6 +107,25 @@ function arcadia11_preprocess_node(array &$variables): void {
   }
 
   $node = $variables['node'];
+  if ($node->bundle() === 'news') {
+    $variables['news_display_date'] = '';
+    $variables['news_social_links'] = arcadia11_build_news_social_links($node);
+    if ($node->hasField('field_date') && !$node->get('field_date')->isEmpty()) {
+      $raw_date = (string) $node->get('field_date')->value;
+      if ($raw_date !== '') {
+        try {
+          $timestamp = (new \DateTimeImmutable($raw_date))->getTimestamp();
+          $variables['news_display_date'] = \Drupal::service('date.formatter')->format($timestamp, 'custom', 'j F Y');
+        }
+        catch (\Exception $exception) {
+          $variables['news_display_date'] = '';
+        }
+      }
+    }
+
+    return;
+  }
+
   if ($node->bundle() !== 'catalogue') {
     return;
   }
@@ -111,6 +182,59 @@ function arcadia11_preprocess_node(array &$variables): void {
       ];
     }
   }
+}
+
+/**
+ * Builds social share links for a news node.
+ */
+function arcadia11_build_news_social_links(NodeInterface $node): array {
+  $absolute_url = $node->toUrl('canonical', ['absolute' => TRUE])->toString();
+  $title = $node->label();
+  $summary = '';
+  $theme_path = base_path() . \Drupal::service('extension.list.theme')->getPath('arcadia11');
+
+  if ($node->hasField('body') && !$node->get('body')->isEmpty()) {
+    $body_item = $node->get('body')->first();
+    $summary_source = (string) ($body_item->summary ?: $body_item->value);
+    $summary = trim(preg_replace('/\s+/', ' ', strip_tags($summary_source)) ?? '');
+    if (function_exists('mb_substr') && function_exists('mb_strlen') && mb_strlen($summary) > 80) {
+      $summary = rtrim(mb_substr($summary, 0, 77)) . '...';
+    }
+    elseif (strlen($summary) > 80) {
+      $summary = rtrim(substr($summary, 0, 77)) . '...';
+    }
+  }
+
+  $encoded_url = rawurlencode($absolute_url);
+  $encoded_title = rawurlencode($title);
+  $encoded_summary = rawurlencode($summary);
+
+  return [
+    [
+      'item_class' => 'social-share-item-facebook first',
+      'link_class' => 'social-share-facebook',
+      'title' => 'Share to Facebook',
+      'label' => 'Facebook',
+      'icon_path' => $theme_path . '/images/icons/share-facebook-32.png',
+      'href' => 'http://facebook.com/sharer.php?u=' . $encoded_url . '&t=' . $encoded_title,
+    ],
+    [
+      'item_class' => 'social-share-item-linkedin',
+      'link_class' => 'social-share-linkedin',
+      'title' => 'Share to LinkedIn',
+      'label' => 'LinkedIn',
+      'icon_path' => $theme_path . '/images/icons/share-linkedin-32.png',
+      'href' => 'http://www.linkedin.com/shareArticle?url=' . $encoded_url . '&mini=true&title=' . $encoded_title . '&ro=false&summary=' . $encoded_summary . '&source=',
+    ],
+    [
+      'item_class' => 'social-share-item-twitter last',
+      'link_class' => 'social-share-twitter',
+      'title' => 'Share to Twitter',
+      'label' => 'Twitter',
+      'icon_path' => $theme_path . '/images/icons/share-twitter-32.png',
+      'href' => 'http://twitter.com/intent/tweet?url=' . $encoded_url . '&text=' . $encoded_title,
+    ],
+  ];
 }
 
 /**
