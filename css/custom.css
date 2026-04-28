@@ -1176,6 +1176,17 @@ div.secondbackgroundImage .training-box {
   height: auto !important;
 }
 
+/* Keep the footer anchored to the viewport bottom when content is short. */
+.page-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.page-wrapper > .main-footer {
+  margin-top: auto;
+}
+
 /* SSHOC-like primary menu layout (desktop). */
 .main-header.header-style-four.vers2 .header-top.style-two {
   display: block;

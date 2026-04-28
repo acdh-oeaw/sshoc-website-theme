@@ -1,5 +1,12 @@
 .page-wrapper {
 	background: #fff !important;
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+}
+
+.page-wrapper > .main-footer {
+	margin-top: auto;
 }
 
 .header-upper{
