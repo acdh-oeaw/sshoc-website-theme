@@ -389,6 +389,57 @@
     });
   }
 
+  function initLegacyCkeditorAccordion(accordionEl) {
+    if (!accordionEl || accordionEl.dataset.ckeditorAccordionInitialized === '1') {
+      return;
+    }
+
+    var headers = Array.prototype.slice.call(accordionEl.querySelectorAll(':scope > dt'));
+    if (!headers.length) {
+      return;
+    }
+
+    accordionEl.classList.add('arcadia-ckeditor-accordion');
+
+    headers.forEach(function (header, index) {
+      var panel = header.nextElementSibling;
+      if (!panel || panel.tagName.toLowerCase() !== 'dd') {
+        return;
+      }
+
+      var panelId = panel.id || 'arcadia-ckeditor-accordion-panel-' + Date.now() + '-' + index;
+      panel.id = panelId;
+
+      header.classList.add('arcadia-ckeditor-accordion__header');
+      header.setAttribute('role', 'button');
+      header.setAttribute('tabindex', '0');
+      header.setAttribute('aria-controls', panelId);
+      header.setAttribute('aria-expanded', 'false');
+
+      panel.classList.add('arcadia-ckeditor-accordion__panel');
+      panel.hidden = true;
+
+      function togglePanel() {
+        var willOpen = header.getAttribute('aria-expanded') !== 'true';
+        header.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+        header.classList.toggle('is-active', willOpen);
+        panel.hidden = !willOpen;
+        panel.classList.toggle('is-active', willOpen);
+      }
+
+      header.addEventListener('click', togglePanel);
+      header.addEventListener('keydown', function (event) {
+        if (event.key !== 'Enter' && event.key !== ' ') {
+          return;
+        }
+        event.preventDefault();
+        togglePanel();
+      });
+    });
+
+    accordionEl.dataset.ckeditorAccordionInitialized = '1';
+  }
+
   Drupal.behaviors.arcadia11Menu = {
     attach: function attach(context) {
       once('arcadia11-menu', '#menumibile', context).forEach(function (toggleButton) {
@@ -452,6 +503,10 @@
       once('arcadia11-accordion-init', '.panel-group', context).forEach(function (accordionEl) {
         initPanelGroupAccordion(accordionEl);
       });
+
+      once('arcadia11-ckeditor-accordion', 'dl.ckeditor-accordion', context).forEach(function (accordionEl) {
+        initLegacyCkeditorAccordion(accordionEl);
+      });
     }
   };
 
@@ -466,6 +521,9 @@
     });
     Array.prototype.slice.call(document.querySelectorAll('.panel-group')).forEach(function (el) {
       initPanelGroupAccordion(el);
+    });
+    Array.prototype.slice.call(document.querySelectorAll('dl.ckeditor-accordion')).forEach(function (el) {
+      initLegacyCkeditorAccordion(el);
     });
 
     document.addEventListener('click', function (event) {

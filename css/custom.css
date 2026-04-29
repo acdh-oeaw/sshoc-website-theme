@@ -2039,6 +2039,93 @@ article.contextual-region.node.node--type-news.node--view-mode-teaser .field-nam
   color: #333;
 }
 
+/* Legacy CKEditor accordion markup imported from the Drupal 7 site. */
+.main-content dl.ckeditor-accordion,
+.main-content .arcadia-ckeditor-accordion {
+  margin: 24px 0;
+  border: 1px solid #049bd2;
+  background: #09aeea;
+}
+
+.main-content dl.ckeditor-accordion > dt,
+.main-content .arcadia-ckeditor-accordion__header {
+  position: relative;
+  margin: 0;
+  padding: 14px 20px 14px 52px;
+  border-bottom: 1px solid rgba(0, 121, 170, 0.35);
+  background: #09aeea;
+  color: #fff;
+  cursor: pointer;
+  font-family: 'Ubuntu', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.35;
+  outline: none;
+  transition: background-color 180ms ease;
+}
+
+.main-content dl.ckeditor-accordion > dt:hover,
+.main-content dl.ckeditor-accordion > dt:focus {
+  background: #079fd7;
+}
+
+.main-content dl.ckeditor-accordion > dt::before {
+  content: "\f107";
+  position: absolute;
+  left: 22px;
+  top: 50%;
+  color: #fff;
+  font-family: "FontAwesome";
+  font-size: 20px;
+  line-height: 1;
+  transform: translateY(-50%);
+  transition: transform 180ms ease;
+}
+
+.main-content dl.ckeditor-accordion > dt.is-active::before {
+  transform: translateY(-50%) rotate(180deg);
+}
+
+.main-content dl.ckeditor-accordion > dt h2,
+.main-content dl.ckeditor-accordion > dt h3,
+.main-content dl.ckeditor-accordion > dt p {
+  margin: 0;
+  color: inherit;
+  font: inherit;
+  line-height: inherit;
+}
+
+.main-content dl.ckeditor-accordion > dt b,
+.main-content dl.ckeditor-accordion > dt strong {
+  font-weight: 700;
+}
+
+.main-content dl.ckeditor-accordion > dd,
+.main-content .arcadia-ckeditor-accordion__panel {
+  margin: 0;
+  padding: 24px 30px;
+  border-bottom: 1px solid #d7e4ed;
+  background: #fff;
+  color: #333;
+}
+
+.main-content dl.ckeditor-accordion > dd[hidden] {
+  display: none !important;
+}
+
+.main-content dl.ckeditor-accordion > dd img {
+  max-width: 100%;
+  height: auto !important;
+}
+
+.main-content dl.ckeditor-accordion > dd > :first-child {
+  margin-top: 0;
+}
+
+.main-content dl.ckeditor-accordion > dd > :last-child {
+  margin-bottom: 0;
+}
+
 .node--type-news:not(.node--view-mode-teaser) .news-full__header {
   margin-bottom: 24px;
 }
