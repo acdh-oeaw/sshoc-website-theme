@@ -41,7 +41,7 @@ function arcadia11_preprocess_page(array &$variables): void {
   }
   else {
     $node = $route_match->getParameter('node');
-    if ($node instanceof NodeInterface && $node->bundle() === 'news') {
+    if ($node instanceof NodeInterface) {
       $variables['page_header_title'] = $node->label();
     }
   }
@@ -96,6 +96,33 @@ function arcadia11_has_news_sidebar_context(): bool {
 
   $node = $route_match->getParameter('node');
   return $node instanceof NodeInterface && $node->bundle() === 'news';
+}
+
+/**
+ * Implements hook_preprocess_breadcrumb().
+ */
+function arcadia11_preprocess_breadcrumb(array &$variables): void {
+  $route_match = \Drupal::routeMatch();
+  $node = $route_match->getParameter('node');
+  if (!$node instanceof NodeInterface) {
+    return;
+  }
+
+  $title = $node->label();
+  if ($title === '') {
+    return;
+  }
+
+  $breadcrumb = $variables['breadcrumb'] ?? [];
+  $last_item = end($breadcrumb);
+  $last_text = is_array($last_item) && isset($last_item['text']) ? (string) $last_item['text'] : '';
+  if ($last_text === $title) {
+    return;
+  }
+
+  $variables['breadcrumb'][] = [
+    'text' => $title,
+  ];
 }
 
 /**

@@ -53,11 +53,11 @@
     </section>
   {% endif %}
 
-  {% if page.breadcrumb %}
+  {% if page_header_title or page.breadcrumb %}
     <section class="page-title">
       <div class="auto-container">
         {% if page_header_title %}
-          <h1 class="news-page-title">{{ page_header_title }}</h1>
+          <h1 class="arcadia-page-title news-page-title">{{ page_header_title }}</h1>
         {% endif %}
         {{ page.breadcrumb }}
       </div>
