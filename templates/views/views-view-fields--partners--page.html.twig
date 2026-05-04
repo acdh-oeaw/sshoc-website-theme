@@ -1,0 +1,17 @@
+{% set partner_card %}
+  <div class="arcadia-partner-card">
+    {% if arcadia_partner_logo %}
+      {{ arcadia_partner_logo }}
+    {% else %}
+      <span class="arcadia-partner-card__title">{{ arcadia_partner_title }}</span>
+    {% endif %}
+  </div>
+{% endset %}
+
+{% if arcadia_partner_url %}
+  <a class="arcadia-partner-card-link" href="{{ arcadia_partner_url }}" target="_blank" rel="noopener noreferrer" aria-label="{{ arcadia_partner_title }}">
+    {{ partner_card }}
+  </a>
+{% else %}
+  {{ partner_card }}
+{% endif %}

@@ -35,16 +35,7 @@ function arcadia11_preprocess_page(array &$variables): void {
     }
   }
 
-  $route_match = \Drupal::routeMatch();
-  if ($route_match->getRouteName() === 'view.news.page') {
-    $variables['page_header_title'] = 'News';
-  }
-  else {
-    $node = $route_match->getParameter('node');
-    if ($node instanceof NodeInterface) {
-      $variables['page_header_title'] = $node->label();
-    }
-  }
+  $variables['page_header_title'] = arcadia11_get_current_page_title();
 
   $variables['top_header_message'] = (string) theme_get_setting('top_header_message');
   $variables['services_title_block'] = (string) theme_get_setting('services_title_block');
@@ -102,13 +93,7 @@ function arcadia11_has_news_sidebar_context(): bool {
  * Implements hook_preprocess_breadcrumb().
  */
 function arcadia11_preprocess_breadcrumb(array &$variables): void {
-  $route_match = \Drupal::routeMatch();
-  $node = $route_match->getParameter('node');
-  if (!$node instanceof NodeInterface) {
-    return;
-  }
-
-  $title = $node->label();
+  $title = arcadia11_get_current_page_title();
   if ($title === '') {
     return;
   }
@@ -123,6 +108,63 @@ function arcadia11_preprocess_breadcrumb(array &$variables): void {
   $variables['breadcrumb'][] = [
     'text' => $title,
   ];
+}
+
+/**
+ * Returns the title used in the page header and final breadcrumb item.
+ */
+function arcadia11_get_current_page_title(): string {
+  $route_match = \Drupal::routeMatch();
+  $route_name = $route_match->getRouteName();
+
+  $view_route_titles = [
+    'view.news.page' => 'News',
+    'view.partners.page' => 'Partners',
+  ];
+  if (isset($view_route_titles[$route_name])) {
+    return $view_route_titles[$route_name];
+  }
+
+  $node = $route_match->getParameter('node');
+  if ($node instanceof NodeInterface) {
+    return $node->label();
+  }
+
+  return '';
+}
+
+/**
+ * Implements hook_preprocess_views_view_fields().
+ */
+function arcadia11_preprocess_views_view_fields(array &$variables): void {
+  $view = $variables['view'] ?? NULL;
+  if (!$view || $view->id() !== 'partners' || $view->current_display !== 'page') {
+    return;
+  }
+
+  $node = $variables['row']->_entity ?? NULL;
+  if (!$node instanceof NodeInterface || $node->bundle() !== 'partner') {
+    return;
+  }
+
+  $variables['arcadia_partner_title'] = $node->label();
+  $variables['arcadia_partner_url'] = '';
+  $variables['arcadia_partner_logo'] = [];
+
+  if ($node->hasField('field_url') && !$node->get('field_url')->isEmpty()) {
+    $variables['arcadia_partner_url'] = (string) $node->get('field_url')->first()->getUrl()->toString();
+  }
+
+  if ($node->hasField('field_logo') && !$node->get('field_logo')->isEmpty()) {
+    $variables['arcadia_partner_logo'] = $node->get('field_logo')->view([
+      'type' => 'image',
+      'label' => 'hidden',
+      'settings' => [
+        'image_style' => 'logo_small',
+        'image_link' => '',
+      ],
+    ]);
+  }
 }
 
 /**
