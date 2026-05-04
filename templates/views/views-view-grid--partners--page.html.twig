@@ -37,7 +37,7 @@
 <div{{ attributes.addClass(classes) }}>
   {% if options.alignment == 'horizontal' %}
     {% for row in items %}
-      <div class="row">
+      <div class="row pb-3">
         {% for column in row.content %}
           <div{{ column.attributes.addClass(col_classes) }}>
             {{- column.content -}}
