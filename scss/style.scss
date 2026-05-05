@@ -11296,3 +11296,17 @@ img {
   flex-basis: 100%;
   margin: 5px;
 }
+
+
+/* PARTNER VIEWS */
+.view.view-partners .slide-item .image-box {
+    border: 1px solid #eee;
+    box-shadow: 2px 2px 5px #e1e1e1;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    background: #fff;
+}
+
+.view.view-partners .slide-item .image-box img {
+    height: auto;
+}
