@@ -16283,3 +16283,12 @@ img {
 .view.view-partners .slide-item .image-box img {
     height: auto;
 }
+
+.eric-projects-field-logo img {
+    width: 100%;
+    max-height: 150px;
+}
+
+.view.view-data-catalogues .box img {
+    height: auto;
+}

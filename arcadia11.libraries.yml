@@ -32,7 +32,7 @@ global:
     # plugins/revolution/js/extensions/revolution.extension.slideanims.min.js: { minified: true }
     # plugins/revolution/js/extensions/revolution.extension.video.min.js: { minified: true }
     js/jquery.countdown.min.js: { minified: true }
-    js/main-slider-script.js: {}
+    # js/main-slider-script.js requires the Revolution Slider plugin above.
     js/jquery.fancybox.js: {}
     js/jquery-ui.js: {}
     js/owl.js: {}
