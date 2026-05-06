@@ -11316,7 +11316,10 @@ img {
     max-height: 150px;
 }
 
-
 .view.view-data-catalogues .box img {
+    height: auto;
+}
+
+.view.view-sshoc-in-action-views .box-nopadding img {
     height: auto;
 }
