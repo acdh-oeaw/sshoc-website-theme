@@ -6,21 +6,25 @@
 
 <article{{ attributes.addClass(classes) }}>
   {% if view_mode == 'teaser' %}
-    <div class="publications-teaser video">
-      <div class="image">
-        <div class="embed-responsive embed-responsive-16by9">
-          {% if content.field_video_embed is defined %}
-            {{ content.field_video_embed }}
+    <div class="sshoc-video-card">
+      <div class="sshoc-video-card__media">
+        <div class="embed-responsive embed-responsive-16by9 sshoc-video-card__embed">
+          {% if sshoc_video_embed_url %}
+            <iframe src="{{ sshoc_video_embed_url }}" title="{{ label }}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>
+          {% elseif sshoc_video_url %}
+            <a href="{{ sshoc_video_url }}" rel="noopener" target="_blank">{{ 'Watch video'|t }}</a>
           {% endif %}
         </div>
       </div>
 
-      <div class="content">
-        <h2{{ title_attributes }}>{{ label }}</h2>
-        {{ content|without('field_video_embed', 'field_link_video', 'field_tags_video', 'field_date', 'links', 'comments') }}
+      <div class="sshoc-video-card__content">
+        <h2{{ title_attributes.addClass('sshoc-video-card__title') }}><a href="{{ url }}">{{ label }}</a></h2>
+        <div class="sshoc-video-card__summary">
+          {{ content|without('field_video_embed', 'field_link_video', 'field_tags_video', 'field_date', 'links', 'comments') }}
+        </div>
       </div>
 
-      <div class="footer">
+      <div class="sshoc-video-card__footer">
         {% if content.field_date is defined %}
           <p><span class="icon-calendar-31"></span><span>{{ content.field_date }}</span></p>
         {% endif %}
@@ -34,7 +38,12 @@
     {{ title_suffix }}
 
     <div class="content"{{ content_attributes }}>
-      {{ content|without('links', 'comments') }}
+      {% if sshoc_video_embed_url %}
+        <div class="embed-responsive embed-responsive-16by9 sshoc-video-full__embed">
+          <iframe src="{{ sshoc_video_embed_url }}" title="{{ label }}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>
+        </div>
+      {% endif %}
+      {{ content|without('field_video_embed', 'links', 'comments') }}
     </div>
 
     {% if content.links is defined %}{{ content.links }}{% endif %}

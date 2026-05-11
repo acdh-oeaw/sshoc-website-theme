@@ -120,6 +120,8 @@ function arcadia11_get_current_page_title(): string {
   $view_route_titles = [
     'view.news.page' => 'News',
     'view.partners.page' => 'Partners',
+    'view.video.page' => 'SSHOC Videos',
+    'view.video.page_1' => 'SSHOC Training Videos',
   ];
   if (isset($view_route_titles[$route_name])) {
     return $view_route_titles[$route_name];
@@ -176,6 +178,17 @@ function arcadia11_preprocess_node(array &$variables): void {
   }
 
   $node = $variables['node'];
+  if ($node->bundle() === 'video') {
+    $variables['sshoc_video_url'] = '';
+    $variables['sshoc_video_embed_url'] = '';
+
+    if ($node->hasField('field_video_embed') && !$node->get('field_video_embed')->isEmpty()) {
+      $url = (string) $node->get('field_video_embed')->uri;
+      $variables['sshoc_video_url'] = $url;
+      $variables['sshoc_video_embed_url'] = arcadia11_youtube_embed_url($url);
+    }
+  }
+
   if ($node->bundle() === 'news') {
     $variables['news_display_date'] = '';
     $variables['news_social_links'] = arcadia11_build_news_social_links($node);
@@ -251,6 +264,47 @@ function arcadia11_preprocess_node(array &$variables): void {
       ];
     }
   }
+}
+
+/**
+ * Converts common YouTube URL formats into an embeddable URL.
+ */
+function arcadia11_youtube_embed_url(string $url): string {
+  if ($url === '') {
+    return '';
+  }
+
+  $parts = parse_url($url);
+  if (empty($parts['host'])) {
+    return '';
+  }
+
+  $host = strtolower((string) $parts['host']);
+  $path = trim((string) ($parts['path'] ?? ''), '/');
+  $video_id = '';
+
+  if ($host === 'youtu.be') {
+    $video_id = strtok($path, '/');
+  }
+  elseif (str_contains($host, 'youtube.com')) {
+    if (str_starts_with($path, 'embed/')) {
+      $video_id = substr($path, 6);
+    }
+    elseif (str_starts_with($path, 'shorts/')) {
+      $video_id = substr($path, 7);
+    }
+    else {
+      parse_str((string) ($parts['query'] ?? ''), $query);
+      $video_id = (string) ($query['v'] ?? '');
+    }
+  }
+
+  $video_id = preg_replace('/[^A-Za-z0-9_-]/', '', (string) $video_id);
+  if ($video_id === '') {
+    return '';
+  }
+
+  return 'https://www.youtube.com/embed/' . $video_id;
 }
 
 /**
