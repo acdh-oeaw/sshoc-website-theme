@@ -122,6 +122,11 @@ function arcadia11_get_current_page_title(): string {
     'view.partners.page' => 'Partners',
     'view.video.page' => 'SSHOC Videos',
     'view.video.page_1' => 'SSHOC Training Videos',
+    'view.events.page' => 'SSHOC at Events',
+    'view.events.page_1' => 'Past events',
+    'view.events.page_2' => 'Page Training',
+    'view.events.page_3' => 'Awareness Raising Events',
+    'view.events.page_5' => 'Other Events',
   ];
   if (isset($view_route_titles[$route_name])) {
     return $view_route_titles[$route_name];
@@ -178,6 +183,27 @@ function arcadia11_preprocess_node(array &$variables): void {
   }
 
   $node = $variables['node'];
+  if ($node->bundle() === 'event') {
+    $variables['arcadia_event_image'] = [];
+    $variables['arcadia_event_date_range'] = arcadia11_format_event_date_range($node);
+    $variables['arcadia_event_location'] = '';
+
+    if ($node->hasField('field_image') && !$node->get('field_image')->isEmpty()) {
+      $variables['arcadia_event_image'] = $node->get('field_image')->view([
+        'type' => 'image',
+        'label' => 'hidden',
+        'settings' => [
+          'image_style' => 'responsive',
+          'image_link' => '',
+        ],
+      ]);
+    }
+
+    if ($node->hasField('field_event_location') && !$node->get('field_event_location')->isEmpty()) {
+      $variables['arcadia_event_location'] = (string) $node->get('field_event_location')->value;
+    }
+  }
+
   if ($node->bundle() === 'video') {
     $variables['sshoc_video_url'] = '';
     $variables['sshoc_video_embed_url'] = '';
@@ -200,6 +226,38 @@ function arcadia11_preprocess_node(array &$variables): void {
           'image_link' => '',
         ],
       ]);
+    }
+  }
+
+  if ($node->bundle() === 'scientific_publications') {
+    $variables['arcadia_scientific_publication_image'] = [];
+    $variables['arcadia_scientific_publication_date'] = [];
+    $variables['arcadia_scientific_publication_tagging'] = [];
+    $variables['arcadia_scientific_publication_url'] = [];
+    $variables['arcadia_scientific_publication_source'] = [];
+
+    if ($node->hasField('field_image') && !$node->get('field_image')->isEmpty()) {
+      $variables['arcadia_scientific_publication_image'] = $node->get('field_image')->view([
+        'type' => 'image',
+        'label' => 'hidden',
+        'settings' => [
+          'image_style' => 'responsive',
+          'image_link' => '',
+        ],
+      ]);
+    }
+
+    foreach ([
+      'field_date' => 'arcadia_scientific_publication_date',
+      'field_tagging' => 'arcadia_scientific_publication_tagging',
+      'field_url' => 'arcadia_scientific_publication_url',
+      'field_source' => 'arcadia_scientific_publication_source',
+    ] as $field_name => $variable_name) {
+      if ($node->hasField($field_name) && !$node->get($field_name)->isEmpty()) {
+        $variables[$variable_name] = $node->get($field_name)->view([
+          'label' => 'hidden',
+        ]);
+      }
     }
   }
 
@@ -278,6 +336,58 @@ function arcadia11_preprocess_node(array &$variables): void {
       ];
     }
   }
+}
+
+/**
+ * Formats the imported D7 event start/end fields like the legacy listing.
+ */
+function arcadia11_format_event_date_range(NodeInterface $node): string {
+  if (!$node->hasField('field_event_date') || $node->get('field_event_date')->isEmpty()) {
+    return '';
+  }
+
+  $start_raw = (string) $node->get('field_event_date')->value;
+  $end_raw = '';
+  if ($node->hasField('field_event_date_end') && !$node->get('field_event_date_end')->isEmpty()) {
+    $end_raw = (string) $node->get('field_event_date_end')->value;
+  }
+  elseif (isset($node->get('field_event_date')->first()->end_value)) {
+    $end_raw = (string) $node->get('field_event_date')->first()->end_value;
+  }
+
+  try {
+    $start = new \DateTimeImmutable($start_raw, new \DateTimeZone('UTC'));
+    $end = $end_raw !== '' ? new \DateTimeImmutable($end_raw, new \DateTimeZone('UTC')) : NULL;
+  }
+  catch (\Exception $exception) {
+    return '';
+  }
+
+  $formatter = \Drupal::service('date.formatter');
+  $start_has_time = (bool) preg_match('/\d{2}:\d{2}/', $start_raw);
+  $end_has_time = (bool) preg_match('/\d{2}:\d{2}/', $end_raw);
+  $start_timestamp = $start->getTimestamp();
+  $start_date = $formatter->format($start_timestamp, 'custom', 'd F Y');
+  $start_time = $start_has_time ? $formatter->format($start_timestamp, 'custom', 'H:i') : '';
+
+  if (!$end) {
+    return $start_time !== '' ? $start_date . ' - ' . $start_time : $start_date;
+  }
+
+  $end_timestamp = $end->getTimestamp();
+  $end_date = $formatter->format($end_timestamp, 'custom', 'd F Y');
+  $end_time = $end_has_time ? $formatter->format($end_timestamp, 'custom', 'H:i') : '';
+
+  if ($start_date === $end_date) {
+    if ($start_time !== '' && $end_time !== '') {
+      return $start_date . ' - ' . $start_time . ' to ' . $end_time;
+    }
+    return $start_date;
+  }
+
+  $start_label = $start_time !== '' ? $start_date . ' - ' . $start_time : $start_date;
+  $end_label = $end_time !== '' ? $end_date . ' - ' . $end_time : $end_date;
+  return $start_label . ' to ' . $end_label;
 }
 
 /**

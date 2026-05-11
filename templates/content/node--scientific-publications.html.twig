@@ -7,37 +7,51 @@
 <article{{ attributes.addClass(classes) }}>
   {% if view_mode == 'teaser' %}
     <div class="news-block-two">
-      {% if content.field_image is defined %}
-        {{ content.field_image }}
+      {% if arcadia_scientific_publication_image %}
+        {{ arcadia_scientific_publication_image }}
       {% endif %}
 
       <div class="inner-box">
         <h3{{ title_attributes }}><a href="{{ url }}">{{ label }}</a></h3>
-        {{ content|without('field_image', 'links', 'comments') }}
+        <div class="arcadia-scientific-publication-meta">
+          {% if arcadia_scientific_publication_date %}
+            {{ arcadia_scientific_publication_date }}
+          {% endif %}
+          {% if arcadia_scientific_publication_tagging %}
+            {{ arcadia_scientific_publication_tagging }}
+          {% endif %}
+        </div>
+        {{ content|without('field_date', 'field_image', 'field_tagging', 'field_url', 'field_source', 'links', 'comments') }}
       </div>
     </div>
   {% else %}
     <div class="post-thumbnail">
       <div class="event-info clearfix">
-        {% if content.field_date is defined %}
-          <div class="date clearfix"><i class="fa fa-calendar"></i>{{ content.field_date }}</div>
+        {% if arcadia_scientific_publication_date %}
+          <div class="date clearfix"><i class="fa fa-calendar"></i>{{ arcadia_scientific_publication_date }}</div>
         {% endif %}
       </div>
 
-      {% if content.field_image is defined %}
-        {{ content.field_image }}
+      {% if arcadia_scientific_publication_image %}
+        {{ arcadia_scientific_publication_image }}
       {% endif %}
 
       <div class="items">
-        {% if content.field_source is defined %}
+        {% if arcadia_scientific_publication_source %}
           <div class="item-attach">
-            <div class="document clearfix"><span class="icon icon-papers"></span><span>{{ content.field_source }}</span></div>
+            <div class="document clearfix"><span class="icon icon-papers"></span><span>{{ arcadia_scientific_publication_source }}</span></div>
           </div>
         {% endif %}
 
-        {% if content.field_url is defined %}
+        {% if arcadia_scientific_publication_url %}
           <div class="item-attach">
-            <div class="document clearfix"><span class="icon icon-network"></span><span>{{ content.field_url }}</span></div>
+            <div class="document clearfix"><span class="icon icon-network"></span><span>{{ arcadia_scientific_publication_url }}</span></div>
+          </div>
+        {% endif %}
+
+        {% if arcadia_scientific_publication_tagging %}
+          <div class="item-attach">
+            <div class="document clearfix"><span class="icon icon-tags"></span><span>{{ arcadia_scientific_publication_tagging }}</span></div>
           </div>
         {% endif %}
 
@@ -50,7 +64,7 @@
     </div>
 
     <div class="content"{{ content_attributes }}>
-      {{ content|without('field_date', 'field_image', 'field_source', 'field_url', 'field_file_attachment', 'field_document', 'field_attachment', 'links', 'comments') }}
+      {{ content|without('field_date', 'field_image', 'field_tagging', 'field_source', 'field_url', 'field_file_attachment', 'field_document', 'field_attachment', 'links', 'comments') }}
     </div>
 
     {% if content.links is defined %}{{ content.links }}{% endif %}

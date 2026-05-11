@@ -6,32 +6,44 @@
 
 <article{{ attributes.addClass(classes) }}>
   {% if view_mode == 'teaser' %}
-    <div class="news-block-two">
-      {% if content.field_image is defined %}
-        <a href="{{ url }}">{{ content.field_image }}</a>
+    <div class="news-block-two arcadia-event-teaser">
+      {% if arcadia_event_image %}
+        <a class="arcadia-event-teaser__image" href="{{ url }}">{{ arcadia_event_image }}</a>
       {% endif %}
 
-      <div class="inner-box">
+      <div class="inner-box arcadia-event-teaser__content">
         <h3{{ title_attributes }}><a href="{{ url }}">{{ label }}</a></h3>
-        {{ content|without('field_image', 'links', 'comments') }}
+        {% if arcadia_event_date_range %}
+          <p class="arcadia-event-teaser__date"><strong>{{ arcadia_event_date_range }}</strong></p>
+        {% endif %}
+        {% if arcadia_event_location %}
+          <p class="arcadia-event-teaser__location"><strong>Location:</strong> {{ arcadia_event_location }}</p>
+        {% endif %}
+        {{ content|without('field_image', 'field_event_date', 'field_event_date_end', 'field_event_location', 'field_tagging', 'links', 'comments') }}
       </div>
     </div>
   {% else %}
     <div class="post-thumbnail">
       <div class="event-info clearfix">
-        {% if content.field_submission_date is defined or content.field_event_date is defined %}
+        {% if arcadia_event_date_range %}
           <div class="date clearfix">
             <i class="fa fa-calendar"></i>
-            {{ content.field_submission_date is defined ? content.field_submission_date : content.field_event_date }}
+            {{ arcadia_event_date_range }}
           </div>
         {% endif %}
       </div>
 
-      {% if content.field_image is defined %}
-        {{ content.field_image }}
+      {% if arcadia_event_image %}
+        {{ arcadia_event_image }}
       {% endif %}
 
       <div class="items">
+        {% if arcadia_event_location %}
+          <div class="item-attach">
+            <div class="document clearfix"><span><i class="fa fa-map-marker"></i></span><span><strong>Location:</strong> {{ arcadia_event_location }}</span></div>
+          </div>
+        {% endif %}
+
         {% if content.field_document is defined %}
           <div class="item-attach">
             <div class="document clearfix"><span><i class="fa fa-file"></i></span><span>{{ content.field_document }}</span></div>
@@ -47,7 +59,7 @@
     </div>
 
     <div class="content"{{ content_attributes }}>
-      {{ content|without('field_submission_date', 'field_event_date', 'field_image', 'field_document', 'field_attachment', 'links', 'comments') }}
+      {{ content|without('field_submission_date', 'field_event_date', 'field_event_date_end', 'field_event_location', 'field_image', 'field_document', 'field_attachment', 'links', 'comments') }}
     </div>
 
     {% if content.links is defined %}{{ content.links }}{% endif %}
