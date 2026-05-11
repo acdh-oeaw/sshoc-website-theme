@@ -189,6 +189,20 @@ function arcadia11_preprocess_node(array &$variables): void {
     }
   }
 
+  if ($node->bundle() === 'reportpresentation') {
+    $variables['arcadia_reportpresentation_image'] = [];
+    if ($node->hasField('field_image') && !$node->get('field_image')->isEmpty()) {
+      $variables['arcadia_reportpresentation_image'] = $node->get('field_image')->view([
+        'type' => 'image',
+        'label' => 'hidden',
+        'settings' => [
+          'image_style' => 'responsive',
+          'image_link' => '',
+        ],
+      ]);
+    }
+  }
+
   if ($node->bundle() === 'news') {
     $variables['news_display_date'] = '';
     $variables['news_social_links'] = arcadia11_build_news_social_links($node);

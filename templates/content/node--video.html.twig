@@ -10,7 +10,7 @@
       <div class="sshoc-video-card__media">
         <div class="embed-responsive embed-responsive-16by9 sshoc-video-card__embed">
           {% if sshoc_video_embed_url %}
-            <iframe src="{{ sshoc_video_embed_url }}" title="{{ label }}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>
+            <iframe src="{{ sshoc_video_embed_url }}" title="{{ node.label }}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>
           {% elseif sshoc_video_url %}
             <a href="{{ sshoc_video_url }}" rel="noopener" target="_blank">{{ 'Watch video'|t }}</a>
           {% endif %}
@@ -40,7 +40,7 @@
     <div class="content"{{ content_attributes }}>
       {% if sshoc_video_embed_url %}
         <div class="embed-responsive embed-responsive-16by9 sshoc-video-full__embed">
-          <iframe src="{{ sshoc_video_embed_url }}" title="{{ label }}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>
+          <iframe src="{{ sshoc_video_embed_url }}" title="{{ node.label }}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>
         </div>
       {% endif %}
       {{ content|without('field_video_embed', 'links', 'comments') }}

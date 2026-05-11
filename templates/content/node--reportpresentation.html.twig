@@ -1,0 +1,55 @@
+{% set classes = [
+  'node',
+  'node--type-reportpresentation',
+  view_mode ? 'node--view-mode-' ~ view_mode|clean_class,
+] %}
+
+<article{{ attributes.addClass(classes) }}>
+  {% if view_mode == 'teaser' %}
+    <div class="arcadia-publication-card arcadia-publication-card--reportpresentation">
+      {% if arcadia_reportpresentation_image %}
+        <a class="arcadia-publication-card__image" href="{{ url }}" aria-label="{{ node.label }}">
+          {{ arcadia_reportpresentation_image }}
+        </a>
+      {% endif %}
+
+      <div class="arcadia-publication-card__content">
+        {{ title_prefix }}
+        <h2{{ title_attributes.addClass('arcadia-publication-card__title') }}><a href="{{ url }}">{{ label }}</a></h2>
+        {{ title_suffix }}
+
+        <div class="arcadia-publication-card__meta">
+          {% if content.field_submission_date is defined %}
+            {{ content.field_submission_date }}
+          {% endif %}
+          {% if content.field_tagging is defined %}
+            {{ content.field_tagging }}
+          {% endif %}
+        </div>
+
+        <div class="arcadia-publication-card__summary">
+          {{ content|without('field_image', 'field_submission_date', 'field_tagging', 'field_type_publication', 'field_attachment', 'field_document', 'links', 'comments') }}
+        </div>
+      </div>
+    </div>
+  {% else %}
+    {{ title_prefix }}
+    {% if not page %}
+      <h2{{ title_attributes }}><a href="{{ url }}">{{ label }}</a></h2>
+    {% endif %}
+    {{ title_suffix }}
+
+    {% if arcadia_reportpresentation_image %}
+      <div class="post-thumbnail">
+        {{ arcadia_reportpresentation_image }}
+      </div>
+    {% endif %}
+
+    <div class="content"{{ content_attributes }}>
+      {{ content|without('field_image', 'links', 'comments') }}
+    </div>
+
+    {% if content.links is defined %}{{ content.links }}{% endif %}
+    {% if content.comments is defined %}{{ content.comments }}{% endif %}
+  {% endif %}
+</article>

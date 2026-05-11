@@ -2416,6 +2416,74 @@ article.contextual-region.node.node--type-news.node--view-mode-teaser .field-nam
   margin-bottom: 28px;
 }
 
+.view-report-publications-posters .views-view-grid .views-col {
+  padding: 0 15px 35px;
+}
+
+.arcadia-publication-card {
+  height: 100%;
+  background: #ffffff;
+  border: 1px solid #eeeeee;
+  border-radius: 4px;
+  box-shadow: 0 3px 14px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+.arcadia-publication-card__image {
+  display: block;
+  background: #f7f7f7;
+  min-height: 180px;
+}
+
+.arcadia-publication-card__image img {
+  display: block;
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+}
+
+.arcadia-publication-card__content {
+  padding: 22px 24px 26px;
+}
+
+.arcadia-publication-card__title {
+  margin: 0 0 14px;
+  font-size: 21px;
+  font-weight: 500;
+  line-height: 1.32;
+}
+
+.arcadia-publication-card__title a {
+  color: #333333;
+  text-decoration: none;
+}
+
+.arcadia-publication-card__title a:hover {
+  color: #0085ca;
+  text-decoration: underline;
+}
+
+.arcadia-publication-card__meta {
+  margin-bottom: 12px;
+  color: #666666;
+  font-size: 14px;
+}
+
+.arcadia-publication-card__meta .field {
+  margin-bottom: 6px;
+}
+
+.arcadia-publication-card__summary,
+.arcadia-publication-card__summary p {
+  color: #555555;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.arcadia-publication-card__summary p:last-child {
+  margin-bottom: 0;
+}
+
 @media (max-width: 991px) {
   .about-section-two .sidebar .arcadia-news-sidebar {
     margin-top: 24px;
@@ -2435,6 +2503,12 @@ article.contextual-region.node.node--type-news.node--view-mode-teaser .field-nam
   }
 
   .view-video .views-view-grid .views-col {
+    width: 100% !important;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .view-report-publications-posters .views-view-grid .views-col {
     width: 100% !important;
     padding-left: 0;
     padding-right: 0;
