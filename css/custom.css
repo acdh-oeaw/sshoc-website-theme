@@ -2526,8 +2526,7 @@ article.contextual-region.node.node--type-news.node--view-mode-teaser .field-nam
 .arcadia-training-events-filter {
   display: flex;
   flex-wrap: wrap;
-  gap: 20px 20px;
-  margin: 0 0 34px;
+  gap: 10px;
 }
 
 .arcadia-training-events-filter__button {
@@ -2538,11 +2537,10 @@ article.contextual-region.node.node--type-news.node--view-mode-teaser .field-nam
   align-items: center;
   justify-content: center;
   flex: 0 1 auto;
-  font-size: 25px;
+  font-size: 15px;
   font-weight: 300;
   line-height: 1.2;
-  min-height: 76px;
-  padding: 18px 38px;
+  padding: 10px;
   text-align: center;
   text-decoration: none;
   white-space: normal;
@@ -2595,9 +2593,8 @@ article.contextual-region.node.node--type-news.node--view-mode-teaser .field-nam
   }
 
   .arcadia-training-events-filter__button {
-    font-size: 20px;
-    min-height: 58px;
-    padding: 14px 22px;
+    font-size: 15px;
+    padding: 10px 10px;
   }
 }
 
