@@ -1,0 +1,16 @@
+{% if arcadia_training_event_filter_links %}
+  <div class="js-form-item form-item js-form-type-select form-type-select js-form-item-field-tagging-target-id form-item-field-tagging-target-id">
+    <div class="arcadia-training-events-filter" role="group" aria-label="Training event tagging filter">
+      {% for item in arcadia_training_event_filter_links %}
+        <a class="arcadia-training-events-filter__button{{ item.active ? ' is-active' }}" href="{{ item.url }}" aria-pressed="{{ item.active ? 'true' : 'false' }}">
+          {{ item.title }}
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+  <div class="arcadia-training-events-filter__form visually-hidden">
+    {{ form }}
+  </div>
+{% else %}
+  {{ form }}
+{% endif %}

@@ -2523,50 +2523,41 @@ article.contextual-region.node.node--type-news.node--view-mode-teaser .field-nam
   color: #333333;
 }
 
-form#views-exposed-form-events-page-2 .form-item-field-tagging-target-id label,
-form.views-exposed-form .form-item-field-tagging-target-id label[for="edit-field-tagging-target-id"] {
-  display: none;
+.arcadia-training-events-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px 20px;
+  margin: 0 0 34px;
 }
 
-form#views-exposed-form-events-page-2 select#edit-field-tagging-target-id,
-form.views-exposed-form select#edit-field-tagging-target-id[name="field_tagging_target_id[]"] {
-  appearance: none;
-  background: transparent;
-  border: 0;
-  box-shadow: none;
-  display: block;
-  height: auto !important;
-  min-height: 0;
-  overflow: visible;
-  padding: 0;
-  white-space: normal;
-  width: 100%;
-}
-
-form#views-exposed-form-events-page-2 select#edit-field-tagging-target-id option,
-form.views-exposed-form select#edit-field-tagging-target-id[name="field_tagging_target_id[]"] option {
-  background: #0089ce;
+.arcadia-training-events-filter__button {
+  background: #0085ca;
   border-radius: 7px;
   color: #ffffff;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 1 auto;
   font-size: 25px;
   font-weight: 300;
   line-height: 1.2;
-  margin: 0 18px 20px 0;
   min-height: 76px;
-  padding: 22px 38px;
+  padding: 18px 38px;
   text-align: center;
+  text-decoration: none;
+  white-space: normal;
 }
 
-form#views-exposed-form-events-page-2 select#edit-field-tagging-target-id option:checked,
-form.views-exposed-form select#edit-field-tagging-target-id[name="field_tagging_target_id[]"] option:checked {
-  background: linear-gradient(#ff9f1c, #ff9f1c);
+.arcadia-training-events-filter__button:hover,
+.arcadia-training-events-filter__button:focus {
+  background: #0075b1;
   color: #ffffff;
+  text-decoration: none;
 }
 
-form#views-exposed-form-events-page-2 .form-actions,
-form.views-exposed-form .form-item-field-tagging-target-id + .form-actions {
-  margin-top: 8px;
+.arcadia-training-events-filter__button.is-active {
+  background: #ff9f1c;
+  color: #ffffff;
 }
 
 @media (max-width: 991px) {
@@ -2599,8 +2590,11 @@ form.views-exposed-form .form-item-field-tagging-target-id + .form-actions {
     padding-right: 0;
   }
 
-  form#views-exposed-form-events-page-2 select#edit-field-tagging-target-id option,
-  form.views-exposed-form select#edit-field-tagging-target-id[name="field_tagging_target_id[]"] option {
+  .arcadia-training-events-filter {
+    gap: 14px;
+  }
+
+  .arcadia-training-events-filter__button {
     font-size: 20px;
     min-height: 58px;
     padding: 14px 22px;
@@ -2617,9 +2611,12 @@ form.views-exposed-form .form-item-field-tagging-target-id + .form-actions {
     margin-bottom: 18px;
   }
 
-  form#views-exposed-form-events-page-2 select#edit-field-tagging-target-id option,
-  form.views-exposed-form select#edit-field-tagging-target-id[name="field_tagging_target_id[]"] option {
+  .arcadia-training-events-filter {
     display: block;
+  }
+
+  .arcadia-training-events-filter__button {
+    display: flex;
     width: 100%;
     margin-bottom: 12px;
   }

@@ -175,6 +175,61 @@ function arcadia11_preprocess_views_view_fields(array &$variables): void {
 }
 
 /**
+ * Implements hook_preprocess_views_exposed_form().
+ */
+function arcadia11_preprocess_views_exposed_form(array &$variables): void {
+  $form = $variables['form'] ?? [];
+  $form_id = (string) ($form['#id'] ?? '');
+  if ($form_id !== 'views-exposed-form-events-page-2' || empty($form['field_tagging_target_id']['#options'])) {
+    $variables['arcadia_training_event_filter_links'] = [];
+    return;
+  }
+
+  $request = \Drupal::request();
+  $current_query = $request->query->all();
+  unset($current_query['page']);
+
+  $selected = $current_query['field_tagging_target_id'] ?? [];
+  if (!is_array($selected)) {
+    $selected = [$selected];
+  }
+  $selected = array_map('strval', $selected);
+
+  $links = [];
+  foreach ($form['field_tagging_target_id']['#options'] as $value => $label) {
+    if ((string) $value === '') {
+      continue;
+    }
+
+    $value = (string) $value;
+    $is_active = in_array($value, $selected, TRUE);
+    $target_values = $selected;
+    if ($is_active) {
+      $target_values = array_values(array_diff($target_values, [$value]));
+    }
+    else {
+      $target_values[] = $value;
+    }
+
+    $target_query = $current_query;
+    if ($target_values === []) {
+      unset($target_query['field_tagging_target_id']);
+    }
+    else {
+      $target_query['field_tagging_target_id'] = array_values(array_unique($target_values));
+    }
+
+    $links[] = [
+      'title' => (string) $label,
+      'url' => Url::fromRoute('<current>', [], ['query' => $target_query])->toString(),
+      'active' => $is_active,
+    ];
+  }
+
+  $variables['arcadia_training_event_filter_links'] = $links;
+}
+
+/**
  * Implements hook_preprocess_node().
  */
 function arcadia11_preprocess_node(array &$variables): void {
