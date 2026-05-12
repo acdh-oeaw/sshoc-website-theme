@@ -2523,6 +2523,52 @@ article.contextual-region.node.node--type-news.node--view-mode-teaser .field-nam
   color: #333333;
 }
 
+form#views-exposed-form-events-page-2 .form-item-field-tagging-target-id label,
+form.views-exposed-form .form-item-field-tagging-target-id label[for="edit-field-tagging-target-id"] {
+  display: none;
+}
+
+form#views-exposed-form-events-page-2 select#edit-field-tagging-target-id,
+form.views-exposed-form select#edit-field-tagging-target-id[name="field_tagging_target_id[]"] {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  display: block;
+  height: auto !important;
+  min-height: 0;
+  overflow: visible;
+  padding: 0;
+  white-space: normal;
+  width: 100%;
+}
+
+form#views-exposed-form-events-page-2 select#edit-field-tagging-target-id option,
+form.views-exposed-form select#edit-field-tagging-target-id[name="field_tagging_target_id[]"] option {
+  background: #0089ce;
+  border-radius: 7px;
+  color: #ffffff;
+  display: inline-block;
+  font-size: 25px;
+  font-weight: 300;
+  line-height: 1.2;
+  margin: 0 18px 20px 0;
+  min-height: 76px;
+  padding: 22px 38px;
+  text-align: center;
+}
+
+form#views-exposed-form-events-page-2 select#edit-field-tagging-target-id option:checked,
+form.views-exposed-form select#edit-field-tagging-target-id[name="field_tagging_target_id[]"] option:checked {
+  background: linear-gradient(#ff9f1c, #ff9f1c);
+  color: #ffffff;
+}
+
+form#views-exposed-form-events-page-2 .form-actions,
+form.views-exposed-form .form-item-field-tagging-target-id + .form-actions {
+  margin-top: 8px;
+}
+
 @media (max-width: 991px) {
   .about-section-two .sidebar .arcadia-news-sidebar {
     margin-top: 24px;
@@ -2552,6 +2598,13 @@ article.contextual-region.node.node--type-news.node--view-mode-teaser .field-nam
     padding-left: 0;
     padding-right: 0;
   }
+
+  form#views-exposed-form-events-page-2 select#edit-field-tagging-target-id option,
+  form.views-exposed-form select#edit-field-tagging-target-id[name="field_tagging_target_id[]"] option {
+    font-size: 20px;
+    min-height: 58px;
+    padding: 14px 22px;
+  }
 }
 
 @media (max-width: 767px) {
@@ -2562,5 +2615,12 @@ article.contextual-region.node.node--type-news.node--view-mode-teaser .field-nam
   .arcadia-event-teaser__image {
     max-width: 100%;
     margin-bottom: 18px;
+  }
+
+  form#views-exposed-form-events-page-2 select#edit-field-tagging-target-id option,
+  form.views-exposed-form select#edit-field-tagging-target-id[name="field_tagging_target_id[]"] option {
+    display: block;
+    width: 100%;
+    margin-bottom: 12px;
   }
 }

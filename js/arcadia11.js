@@ -507,6 +507,7 @@
       once('arcadia11-ckeditor-accordion', 'dl.ckeditor-accordion', context).forEach(function (accordionEl) {
         initLegacyCkeditorAccordion(accordionEl);
       });
+
     }
   };
 
