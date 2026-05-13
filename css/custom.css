@@ -409,11 +409,18 @@ margin-bottom: 0;
 
 .arcadia-service-catalogue-filter__icon {
 	flex: 1 1 auto;
-	display: block;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 	min-height: 150px;
-	background-position: center;
-	background-repeat: no-repeat;
-	background-size: 96px auto;
+	padding: 28px;
+}
+
+.arcadia-service-catalogue-filter__icon img {
+	display: block;
+	width: auto;
+	max-width: 116px;
+	max-height: 110px;
 }
 
 .arcadia-service-catalogue-filter__label {
