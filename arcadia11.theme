@@ -292,10 +292,9 @@ function arcadia11_service_catalogue_filter_links(): array {
 
     $links[] = [
       'title' => $term->label(),
-      'url' => Url::fromRoute('<current>', [], ['query' => $target_query])->toString(),
+      'url' => Url::fromUserInput('/service-catalogue', ['query' => $target_query])->toString(),
       'active' => in_array($term_id, $selected, TRUE),
       'icon' => arcadia11_service_catalogue_icon((int) $term->id()),
-      'icon_url' => arcadia11_service_catalogue_icon_url((int) $term->id()),
     ];
   }
 
@@ -334,18 +333,6 @@ function arcadia11_service_catalogue_icon(int $term_id): string {
   ];
 
   return $icon_map[$term_id] ?? '';
-}
-
-/**
- * Returns the public URL for a Service Catalogue icon.
- */
-function arcadia11_service_catalogue_icon_url(int $term_id): string {
-  $icon = arcadia11_service_catalogue_icon($term_id);
-  if ($icon === '') {
-    return '';
-  }
-
-  return \Drupal::service('file_url_generator')->generateString('public://' . $icon . '.png');
 }
 
 /**
