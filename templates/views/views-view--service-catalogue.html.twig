@@ -29,15 +29,18 @@
     </nav>
   {% endif %}
 
-  {{ exposed }}
+  <div class="visually-hidden">
+    {{ exposed }}
+  </div>
   {{ attachment_before }}
 
-  {% if rows -%}
+  {% if arcadia_service_catalogue_manual_rows is not empty -%}
+    {{ arcadia_service_catalogue_manual_rows }}
+  {% elseif rows -%}
     {{ rows }}
   {% elseif empty -%}
     {{ empty }}
   {% endif %}
-  {{ pager }}
 
   {{ attachment_after }}
   {{ more }}

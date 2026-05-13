@@ -182,12 +182,14 @@ function arcadia11_preprocess_views_view_fields(array &$variables): void {
 function arcadia11_preprocess_views_view(array &$variables): void {
   $view = $variables['view'] ?? NULL;
   $variables['arcadia_service_catalogue_filter_links'] = [];
+  $variables['arcadia_service_catalogue_manual_rows'] = [];
 
   if (!$view || $view->id() !== 'service_catalogue') {
     return;
   }
 
   $variables['arcadia_service_catalogue_filter_links'] = arcadia11_service_catalogue_filter_links();
+  $variables['arcadia_service_catalogue_manual_rows'] = arcadia11_service_catalogue_rows();
 }
 
 /**
@@ -269,8 +271,8 @@ function arcadia11_service_catalogue_filter_links(): array {
   $terms = $term_storage->loadMultiple($ids);
   uasort($terms, static function ($a, $b): int {
     $order = arcadia11_service_catalogue_term_order();
-    $a_weight = $order[(int) $a->id()] ?? 999;
-    $b_weight = $order[(int) $b->id()] ?? 999;
+    $a_weight = $order[arcadia11_normalize_service_catalogue_label($a->label())] ?? 999;
+    $b_weight = $order[arcadia11_normalize_service_catalogue_label($b->label())] ?? 999;
     return $a_weight <=> $b_weight ?: strcasecmp($a->label(), $b->label());
   });
 
@@ -278,23 +280,32 @@ function arcadia11_service_catalogue_filter_links(): array {
   $query = $request->query->all();
   unset($query['page']);
 
-  $selected = $query['field_service_catalogue_tid'] ?? [];
-  if (!is_array($selected)) {
-    $selected = $selected === '' ? [] : [$selected];
-  }
-  $selected = array_map('strval', $selected);
+  $selected = arcadia11_selected_service_catalogue_terms();
 
   $links = [];
   foreach ($terms as $term) {
     $term_id = (string) $term->id();
     $target_query = $query;
-    $target_query['field_service_catalogue_tid'] = [$term_id];
+    $target_values = $selected;
+    if (in_array($term_id, $target_values, TRUE)) {
+      $target_values = array_values(array_diff($target_values, [$term_id]));
+    }
+    else {
+      $target_values[] = $term_id;
+    }
+
+    if ($target_values === []) {
+      unset($target_query['field_service_catalogue_tid']);
+    }
+    else {
+      $target_query['field_service_catalogue_tid'] = array_values(array_unique($target_values));
+    }
 
     $links[] = [
       'title' => $term->label(),
       'url' => Url::fromUserInput('/service-catalogue', ['query' => $target_query])->toString(),
       'active' => in_array($term_id, $selected, TRUE),
-      'icon' => arcadia11_service_catalogue_icon((int) $term->id()),
+      'icon' => arcadia11_service_catalogue_icon((int) $term->id(), $term->label()),
     ];
   }
 
@@ -302,26 +313,112 @@ function arcadia11_service_catalogue_filter_links(): array {
 }
 
 /**
+ * Returns selected Service Catalogue term IDs from the current query string.
+ */
+function arcadia11_selected_service_catalogue_terms(): array {
+  $selected = \Drupal::request()->query->all()['field_service_catalogue_tid'] ?? [];
+  if (!is_array($selected)) {
+    $selected = $selected === '' ? [] : [$selected];
+  }
+
+  return array_values(array_filter(array_map(static function ($value): string {
+    return preg_replace('/[^0-9]/', '', (string) $value) ?? '';
+  }, $selected), static fn(string $value): bool => $value !== ''));
+}
+
+/**
+ * Builds catalogue rows filtered by the selected Property terms.
+ */
+function arcadia11_service_catalogue_rows(): array {
+  $selected = array_map('intval', arcadia11_selected_service_catalogue_terms());
+  $storage = \Drupal::entityTypeManager()->getStorage('node');
+  $query = $storage->getQuery()
+    ->accessCheck(TRUE)
+    ->condition('type', 'catalogue')
+    ->condition('status', 1)
+    ->sort('title', 'ASC');
+
+  if ($selected !== []) {
+    $query->condition('field_service_catalogue.target_id', $selected, 'IN');
+  }
+
+  $ids = $query->execute();
+  if (!$ids) {
+    return [
+      '#type' => 'container',
+      '#attributes' => ['class' => ['view-content', 'arcadia-service-catalogue-results']],
+      'empty' => [
+        '#markup' => '<div class="catalogue-empty">' . t('No catalogue items found for the selected filters.') . '</div>',
+      ],
+    ];
+  }
+
+  $nodes = $storage->loadMultiple($ids);
+  $view_builder = \Drupal::entityTypeManager()->getViewBuilder('node');
+  $build = [
+    '#type' => 'container',
+    '#attributes' => ['class' => ['view-content', 'arcadia-service-catalogue-results']],
+  ];
+
+  $index = 0;
+  foreach ($nodes as $node) {
+    if (!$node instanceof NodeInterface || !$node->access('view')) {
+      continue;
+    }
+    $build['row_' . $index] = [
+      '#type' => 'container',
+      '#attributes' => [
+        'class' => [
+          'views-row',
+          'arcadia-service-catalogue-row',
+          'row-' . ($index + 1),
+        ],
+      ],
+      'content' => $view_builder->view($node, 'teaser'),
+    ];
+    $index++;
+  }
+
+  return $build;
+}
+
+/**
  * Legacy Service Catalogue category display order.
  */
 function arcadia11_service_catalogue_term_order(): array {
   return [
-    24 => 0,
-    28 => 1,
-    21 => 2,
-    25 => 3,
-    26 => 4,
-    23 => 5,
-    22 => 6,
-    27 => 7,
+    'data management' => 0,
+    'datasets' => 1,
+    'networking' => 2,
+    'processing & analysis' => 3,
+    'security & operations' => 4,
+    'sharing & discovery' => 5,
+    'storage' => 6,
+    'training & support' => 7,
   ];
 }
 
 /**
  * Maps service catalogue term IDs to legacy icon filenames.
  */
-function arcadia11_service_catalogue_icon(int $term_id): string {
-  $icon_map = [
+function arcadia11_service_catalogue_icon(int $term_id, string $label = ''): string {
+  $label_icon_map = [
+    'data management' => 'datamanagement',
+    'datasets' => 'datasets',
+    'networking' => 'networking',
+    'processing & analysis' => 'processing',
+    'security & operations' => 'security',
+    'sharing & discovery' => 'sharing',
+    'storage' => 'storage',
+    'training & support' => 'training',
+  ];
+
+  $normalized_label = arcadia11_normalize_service_catalogue_label($label);
+  if ($normalized_label !== '' && isset($label_icon_map[$normalized_label])) {
+    return $label_icon_map[$normalized_label];
+  }
+
+  $legacy_id_icon_map = [
     21 => 'networking',
     22 => 'storage',
     23 => 'sharing',
@@ -332,7 +429,17 @@ function arcadia11_service_catalogue_icon(int $term_id): string {
     28 => 'datasets',
   ];
 
-  return $icon_map[$term_id] ?? '';
+  return $legacy_id_icon_map[$term_id] ?? '';
+}
+
+/**
+ * Normalizes Service Catalogue labels for stable mapping across environments.
+ */
+function arcadia11_normalize_service_catalogue_label(string $label): string {
+  $label = html_entity_decode($label, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+  $label = str_replace(['&amp;', ' and '], ['&', ' & '], $label);
+  $label = preg_replace('/\s+/', ' ', $label) ?? '';
+  return strtolower(trim($label));
 }
 
 /**
@@ -447,8 +554,10 @@ function arcadia11_preprocess_node(array &$variables): void {
 
   $variables['catalogue_icon'] = '';
   if ($node->hasField('field_service_catalogue') && !$node->get('field_service_catalogue')->isEmpty()) {
+    $term = $node->get('field_service_catalogue')->entity;
     $term_id = (int) $node->get('field_service_catalogue')->target_id;
-    $variables['catalogue_icon'] = arcadia11_service_catalogue_icon($term_id);
+    $term_label = $term && method_exists($term, 'label') ? $term->label() : '';
+    $variables['catalogue_icon'] = arcadia11_service_catalogue_icon($term_id, $term_label);
   }
 
   $variables['catalogue_type_label'] = arcadia11_node_referenced_term_labels($node, 'field_type');
