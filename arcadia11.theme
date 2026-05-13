@@ -127,6 +127,8 @@ function arcadia11_get_current_page_title(): string {
     'view.events.page_2' => 'Page Training',
     'view.events.page_3' => 'Awareness Raising Events',
     'view.events.page_5' => 'Other Events',
+    'view.service_catalogue.page' => 'Service Catalogue',
+    'view.service_catalogue.page_1' => 'Service Catalogue',
   ];
   if (isset($view_route_titles[$route_name])) {
     return $view_route_titles[$route_name];
@@ -180,6 +182,13 @@ function arcadia11_preprocess_views_view_fields(array &$variables): void {
 function arcadia11_preprocess_views_exposed_form(array &$variables): void {
   $form = $variables['form'] ?? [];
   $form_id = (string) ($form['#id'] ?? '');
+  $variables['arcadia_service_catalogue_filter_links'] = [];
+
+  if (str_starts_with($form_id, 'views-exposed-form-service-catalogue-')) {
+    $variables['arcadia_service_catalogue_filter_links'] = arcadia11_service_catalogue_filter_links();
+    return;
+  }
+
   if ($form_id !== 'views-exposed-form-events-page-2' || empty($form['field_tagging_target_id']['#options'])) {
     $variables['arcadia_training_event_filter_links'] = [];
     return;
@@ -227,6 +236,89 @@ function arcadia11_preprocess_views_exposed_form(array &$variables): void {
   }
 
   $variables['arcadia_training_event_filter_links'] = $links;
+}
+
+/**
+ * Builds the card-style Service Catalogue category filter.
+ */
+function arcadia11_service_catalogue_filter_links(): array {
+  $term_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
+  $ids = $term_storage->getQuery()
+    ->accessCheck(TRUE)
+    ->condition('vid', 'service_catalogue')
+    ->execute();
+
+  if (!$ids) {
+    return [];
+  }
+
+  $terms = $term_storage->loadMultiple($ids);
+  uasort($terms, static function ($a, $b): int {
+    $order = arcadia11_service_catalogue_term_order();
+    $a_weight = $order[(int) $a->id()] ?? 999;
+    $b_weight = $order[(int) $b->id()] ?? 999;
+    return $a_weight <=> $b_weight ?: strcasecmp($a->label(), $b->label());
+  });
+
+  $request = \Drupal::request();
+  $query = $request->query->all();
+  unset($query['page']);
+
+  $selected = $query['field_service_catalogue_tid'] ?? [];
+  if (!is_array($selected)) {
+    $selected = $selected === '' ? [] : [$selected];
+  }
+  $selected = array_map('strval', $selected);
+
+  $links = [];
+  foreach ($terms as $term) {
+    $term_id = (string) $term->id();
+    $target_query = $query;
+    $target_query['field_service_catalogue_tid'] = [$term_id];
+
+    $links[] = [
+      'title' => $term->label(),
+      'url' => Url::fromRoute('<current>', [], ['query' => $target_query])->toString(),
+      'active' => in_array($term_id, $selected, TRUE),
+      'icon' => arcadia11_service_catalogue_icon((int) $term->id()),
+    ];
+  }
+
+  return $links;
+}
+
+/**
+ * Legacy Service Catalogue category display order.
+ */
+function arcadia11_service_catalogue_term_order(): array {
+  return [
+    24 => 0,
+    28 => 1,
+    21 => 2,
+    25 => 3,
+    26 => 4,
+    23 => 5,
+    22 => 6,
+    27 => 7,
+  ];
+}
+
+/**
+ * Maps service catalogue term IDs to legacy icon filenames.
+ */
+function arcadia11_service_catalogue_icon(int $term_id): string {
+  $icon_map = [
+    21 => 'networking',
+    22 => 'storage',
+    23 => 'sharing',
+    24 => 'datamanagement',
+    25 => 'processing',
+    26 => 'security',
+    27 => 'training',
+    28 => 'datasets',
+  ];
+
+  return $icon_map[$term_id] ?? '';
 }
 
 /**
@@ -339,21 +431,16 @@ function arcadia11_preprocess_node(array &$variables): void {
     return;
   }
 
-  $icon_map = [
-    22 => 'storage',
-    23 => 'sharing',
-    24 => 'datamanagement',
-    25 => 'processing',
-    26 => 'security',
-    27 => 'training',
-    28 => 'datasets',
-  ];
-
   $variables['catalogue_icon'] = '';
   if ($node->hasField('field_service_catalogue') && !$node->get('field_service_catalogue')->isEmpty()) {
     $term_id = (int) $node->get('field_service_catalogue')->target_id;
-    $variables['catalogue_icon'] = $icon_map[$term_id] ?? '';
+    $variables['catalogue_icon'] = arcadia11_service_catalogue_icon($term_id);
   }
+
+  $variables['catalogue_type_label'] = arcadia11_node_referenced_term_labels($node, 'field_type');
+  $variables['catalogue_property_label'] = arcadia11_node_referenced_term_labels($node, 'field_service_catalogue');
+  $variables['catalogue_accessible_links'] = arcadia11_node_link_values($node, 'field_url');
+  $variables['catalogue_factsheet_links'] = arcadia11_node_link_values($node, 'field_link');
 
   $variables['catalogue_related'] = [
     'deliverable' => [],
@@ -391,6 +478,46 @@ function arcadia11_preprocess_node(array &$variables): void {
       ];
     }
   }
+}
+
+/**
+ * Returns referenced taxonomy term labels for a node field.
+ */
+function arcadia11_node_referenced_term_labels(NodeInterface $node, string $field_name): array {
+  if (!$node->hasField($field_name) || $node->get($field_name)->isEmpty()) {
+    return [];
+  }
+
+  $labels = [];
+  foreach ($node->get($field_name)->referencedEntities() as $entity) {
+    if (method_exists($entity, 'label')) {
+      $labels[] = $entity->label();
+    }
+  }
+  return $labels;
+}
+
+/**
+ * Returns normalized link values for a node link field.
+ */
+function arcadia11_node_link_values(NodeInterface $node, string $field_name): array {
+  if (!$node->hasField($field_name) || $node->get($field_name)->isEmpty()) {
+    return [];
+  }
+
+  $links = [];
+  foreach ($node->get($field_name) as $item) {
+    try {
+      $links[] = [
+        'url' => $item->getUrl()->toString(),
+        'title' => (string) ($item->title ?: $item->uri),
+      ];
+    }
+    catch (\Exception $exception) {
+      continue;
+    }
+  }
+  return $links;
 }
 
 /**

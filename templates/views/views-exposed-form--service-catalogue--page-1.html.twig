@@ -1,0 +1,12 @@
+{% if arcadia_service_catalogue_filter_links is not empty %}
+  <nav class="arcadia-service-catalogue-filter" aria-label="{{ 'Service catalogue filter'|t }}">
+    {% for item in arcadia_service_catalogue_filter_links %}
+      <a class="arcadia-service-catalogue-filter__item{% if item.active %} is-active{% endif %}" href="{{ item.url }}">
+        {% if item.icon %}
+          <span class="arcadia-service-catalogue-filter__icon" style="background-image: url('/sites/default/files/{{ item.icon }}.png');"></span>
+        {% endif %}
+        <span class="arcadia-service-catalogue-filter__label">{{ item.title }}</span>
+      </a>
+    {% endfor %}
+  </nav>
+{% endif %}

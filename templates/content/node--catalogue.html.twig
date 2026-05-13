@@ -5,6 +5,57 @@
 ] %}
 
 <article{{ attributes.addClass(classes) }}>
+  {% if not page %}
+    <div class="catalogue-teaser-card">
+      <div class="catalogue-teaser-heading">
+        <h2{{ title_attributes }}><a href="{{ url }}">{{ label }}</a></h2>
+        {% if catalogue_icon %}
+          <img alt="" class="catalogue-teaser-icon" src="/sites/default/files/{{ catalogue_icon }}.png">
+        {% endif %}
+      </div>
+
+      <div class="catalogue-teaser-body">
+        {{ content.body }}
+
+        {% if catalogue_type_label is not empty %}
+          <div class="catalogue-teaser-meta">
+            <strong>{{ 'Type:'|t }}</strong>
+            {% for item in catalogue_type_label %}
+              <span>{{ item }}</span>{% if not loop.last %}, {% endif %}
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        {% if catalogue_property_label is not empty %}
+          <div class="catalogue-teaser-meta">
+            <strong>{{ 'Property:'|t }}</strong>
+            {% for item in catalogue_property_label %}
+              <span>{{ item }}</span>{% if not loop.last %}, {% endif %}
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        {% if catalogue_accessible_links is not empty %}
+          <div class="catalogue-teaser-meta">
+            <strong>{{ 'Accessible at:'|t }}</strong>
+            {% for item in catalogue_accessible_links %}
+              <a href="{{ item.url }}">{{ item.title }}</a>{% if not loop.last %}<br>{% endif %}
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        {% set resource_links = catalogue_related.deliverable|merge(catalogue_factsheet_links) %}
+        {% if resource_links is not empty %}
+          <div class="catalogue-teaser-meta">
+            <strong>{{ 'SSHOC Resources:'|t }}</strong>
+            {% for item in resource_links %}
+              <a href="{{ item.url }}">{{ item.title }}</a>{% if not loop.last %}<br>{% endif %}
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  {% else %}
   <div class="row">
     <div class="col-10">
       {% if not page %}
@@ -74,4 +125,5 @@
 
   {% if content.links is defined %}{{ content.links }}{% endif %}
   {% if content.comments is defined %}{{ content.comments }}{% endif %}
+  {% endif %}
 </article>

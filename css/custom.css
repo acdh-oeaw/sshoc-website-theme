@@ -379,6 +379,178 @@ margin-bottom: 0;
 	
 }
 
+.arcadia-service-catalogue-filter {
+	display: grid;
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+	gap: 28px 34px;
+	margin: 0 0 62px;
+}
+
+.arcadia-service-catalogue-filter__item {
+	min-height: 205px;
+	background: #fff;
+	border: 1px solid #e8e8e8;
+	border-radius: 6px;
+	box-shadow: 2px 2px 9px rgba(0, 0, 0, 0.15);
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-end;
+	overflow: hidden;
+	text-align: center;
+	text-decoration: none;
+	transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+.arcadia-service-catalogue-filter__item:hover {
+	transform: translateY(-2px);
+	box-shadow: 3px 5px 14px rgba(0, 0, 0, 0.18);
+	text-decoration: none;
+}
+
+.arcadia-service-catalogue-filter__icon {
+	flex: 1 1 auto;
+	display: block;
+	min-height: 150px;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: 96px auto;
+}
+
+.arcadia-service-catalogue-filter__label {
+	display: block;
+	width: 100%;
+	background: #0085ca;
+	color: #fff;
+	font-size: 20px;
+	font-weight: 700;
+	line-height: 1.25;
+	padding: 12px 14px;
+}
+
+.arcadia-service-catalogue-filter__item.is-active .arcadia-service-catalogue-filter__label {
+	background: #ff9e1b;
+}
+
+.view-service-catalogue.service-catalogue-page .view-content {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	column-gap: 0;
+	row-gap: 46px;
+	margin-top: 30px;
+}
+
+.view-service-catalogue.service-catalogue-page .views-row {
+	margin: 0;
+	padding: 0 38px;
+	border-left: 3px solid #ff9e1b;
+}
+
+.view-service-catalogue.service-catalogue-page .views-row:nth-child(2n) {
+	border-right: 0;
+}
+
+.catalogue-teaser-card {
+	background: #fff;
+	min-height: 100%;
+}
+
+.catalogue-teaser-heading {
+	display: grid;
+	grid-template-columns: 1fr 96px;
+	align-items: start;
+	gap: 20px;
+	margin-bottom: 28px;
+}
+
+.catalogue-teaser-heading h2 {
+	margin: 0;
+	line-height: 1.25;
+}
+
+.catalogue-teaser-heading h2 a {
+	color: #0085ca;
+	font-size: 25px;
+	font-weight: 700;
+	line-height: 1.35;
+	text-decoration: none;
+}
+
+.catalogue-teaser-heading h2 a:hover {
+	color: #00558c;
+	text-decoration: none;
+}
+
+.catalogue-teaser-icon {
+	display: block;
+	max-width: 86px;
+	max-height: 86px;
+	margin-left: auto;
+}
+
+.catalogue-teaser-body {
+	color: #333;
+	font-size: 18px;
+	line-height: 1.45;
+}
+
+.catalogue-teaser-body .field,
+.catalogue-teaser-body p {
+	margin-bottom: 22px;
+}
+
+.catalogue-teaser-body .field__label,
+.catalogue-teaser-body .field-label {
+	display: none;
+}
+
+.catalogue-teaser-meta {
+	margin-top: 22px;
+}
+
+.catalogue-teaser-meta strong {
+	display: block;
+	color: #333;
+	font-weight: 700;
+}
+
+.catalogue-teaser-meta a {
+	color: #0085ca;
+	text-decoration: none;
+}
+
+.catalogue-teaser-meta a:hover {
+	text-decoration: underline;
+}
+
+@media (max-width: 991px) {
+	.arcadia-service-catalogue-filter {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+
+	.view-service-catalogue.service-catalogue-page .view-content {
+		grid-template-columns: 1fr;
+	}
+}
+
+@media (max-width: 575px) {
+	.arcadia-service-catalogue-filter {
+		grid-template-columns: 1fr;
+		gap: 20px;
+	}
+
+	.view-service-catalogue.service-catalogue-page .views-row {
+		padding: 0 0 0 20px;
+	}
+
+	.catalogue-teaser-heading {
+		grid-template-columns: 1fr;
+	}
+
+	.catalogue-teaser-icon {
+		margin: 0;
+	}
+}
+
 
 #block-views-exp-service-catalogue-page-1 .views-exposed-widgets #edit-field-service-catalogue-tid-24--2, 
 #block-views-exp-service-catalogue-page-1 .views-exposed-widgets #edit-field-service-catalogue-tid-24{
