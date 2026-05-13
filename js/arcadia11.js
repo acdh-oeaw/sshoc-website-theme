@@ -440,54 +440,58 @@
     accordionEl.dataset.ckeditorAccordionInitialized = '1';
   }
 
-  function initServiceCatalogueAjax(viewEl) {
-    if (!viewEl || viewEl.dataset.serviceCatalogueAjaxInitialized === '1') {
+  function replaceServiceCatalogueContent(viewEl, url, pushState) {
+    if (!viewEl || !url) {
       return;
     }
 
-    function replaceServiceCatalogueContent(url, pushState) {
-      viewEl.classList.add('is-loading');
+    viewEl.classList.add('is-loading');
 
-      window.fetch(url, {
-        headers: {
-          'X-Requested-With': 'XMLHttpRequest'
-        },
-        credentials: 'same-origin'
+    window.fetch(url, {
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest'
+      },
+      credentials: 'same-origin'
+    })
+      .then(function (response) {
+        if (!response.ok) {
+          throw new Error('HTTP ' + response.status);
+        }
+        return response.text();
       })
-        .then(function (response) {
-          if (!response.ok) {
-            throw new Error('HTTP ' + response.status);
-          }
-          return response.text();
-        })
-        .then(function (html) {
-          var parser = new window.DOMParser();
-          var doc = parser.parseFromString(html, 'text/html');
-          var nextView = doc.querySelector('.view-service-catalogue.service-catalogue-page') || doc.querySelector('.view-service-catalogue');
-          var currentFilter = viewEl.querySelector('.arcadia-service-catalogue-filter');
-          var nextFilter = nextView ? nextView.querySelector('.arcadia-service-catalogue-filter') : null;
-          var currentResults = viewEl.querySelector('.arcadia-service-catalogue-results');
-          var nextResults = nextView ? nextView.querySelector('.arcadia-service-catalogue-results') : null;
+      .then(function (html) {
+        var parser = new window.DOMParser();
+        var doc = parser.parseFromString(html, 'text/html');
+        var nextView = doc.querySelector('[data-arcadia-service-catalogue-view="1"]') || doc.querySelector('.view-service-catalogue.service-catalogue-page') || doc.querySelector('.view-service-catalogue');
+        var currentFilter = viewEl.querySelector('.arcadia-service-catalogue-filter');
+        var nextFilter = nextView ? nextView.querySelector('.arcadia-service-catalogue-filter') : null;
+        var currentResults = viewEl.querySelector('.arcadia-service-catalogue-results');
+        var nextResults = nextView ? nextView.querySelector('.arcadia-service-catalogue-results') : null;
 
-          if (!currentFilter || !nextFilter || !currentResults || !nextResults) {
-            throw new Error('Service catalogue fragments missing');
-          }
+        if (!currentFilter || !nextFilter || !currentResults || !nextResults) {
+          throw new Error('Service catalogue fragments missing');
+        }
 
-          currentFilter.replaceWith(nextFilter);
-          currentResults.replaceWith(nextResults);
+        currentFilter.replaceWith(nextFilter);
+        currentResults.replaceWith(nextResults);
 
-          if (pushState) {
-            window.history.pushState({ arcadiaServiceCatalogue: true }, '', url);
-          }
+        if (pushState) {
+          window.history.pushState({ arcadiaServiceCatalogue: true }, '', url);
+        }
 
-          Drupal.attachBehaviors(viewEl);
-        })
-        .catch(function () {
-          window.location.href = url;
-        })
-        .finally(function () {
-          viewEl.classList.remove('is-loading');
-        });
+        Drupal.attachBehaviors(viewEl);
+      })
+      .catch(function () {
+        window.location.href = url;
+      })
+      .finally(function () {
+        viewEl.classList.remove('is-loading');
+      });
+  }
+
+  function initServiceCatalogueAjax(viewEl) {
+    if (!viewEl || viewEl.dataset.serviceCatalogueAjaxInitialized === '1') {
+      return;
     }
 
     viewEl.addEventListener('click', function (event) {
@@ -502,52 +506,31 @@
       }
 
       event.preventDefault();
-      replaceServiceCatalogueContent(url, true);
+      replaceServiceCatalogueContent(viewEl, url, true);
     });
 
     if (!window.arcadiaServiceCataloguePopstateInitialized) {
       window.addEventListener('popstate', function () {
-        var activeView = document.querySelector('.view-service-catalogue.service-catalogue-page') || document.querySelector('.view-service-catalogue');
+        var activeView = document.querySelector('[data-arcadia-service-catalogue-view="1"]') || document.querySelector('.view-service-catalogue.service-catalogue-page') || document.querySelector('.view-service-catalogue');
         if (!activeView || activeView.dataset.serviceCatalogueAjaxInitialized !== '1') {
           return;
         }
-        activeView.classList.add('is-loading');
-        window.fetch(window.location.href, {
-          headers: {
-            'X-Requested-With': 'XMLHttpRequest'
-          },
-          credentials: 'same-origin'
-        })
-          .then(function (response) {
-            if (!response.ok) {
-              throw new Error('HTTP ' + response.status);
-            }
-            return response.text();
-          })
-          .then(function (html) {
-            var parser = new window.DOMParser();
-            var doc = parser.parseFromString(html, 'text/html');
-            var nextView = doc.querySelector('.view-service-catalogue.service-catalogue-page') || doc.querySelector('.view-service-catalogue');
-            var nextFilter = nextView ? nextView.querySelector('.arcadia-service-catalogue-filter') : null;
-            var nextResults = nextView ? nextView.querySelector('.arcadia-service-catalogue-results') : null;
-            var currentFilter = activeView.querySelector('.arcadia-service-catalogue-filter');
-            var currentResults = activeView.querySelector('.arcadia-service-catalogue-results');
-            if (currentFilter && nextFilter) {
-              currentFilter.replaceWith(nextFilter);
-            }
-            if (currentResults && nextResults) {
-              currentResults.replaceWith(nextResults);
-            }
-            Drupal.attachBehaviors(activeView);
-          })
-          .finally(function () {
-            activeView.classList.remove('is-loading');
-          });
+        replaceServiceCatalogueContent(activeView, window.location.href, false);
       });
       window.arcadiaServiceCataloguePopstateInitialized = true;
     }
 
     viewEl.dataset.serviceCatalogueAjaxInitialized = '1';
+  }
+
+  function findServiceCatalogueView(element) {
+    if (!element) {
+      return null;
+    }
+    return element.closest('[data-arcadia-service-catalogue-view="1"]') ||
+      element.closest('.view-service-catalogue') ||
+      document.querySelector('[data-arcadia-service-catalogue-view="1"]') ||
+      document.querySelector('.view-service-catalogue');
   }
 
   Drupal.behaviors.arcadia11Menu = {
@@ -618,7 +601,7 @@
         initLegacyCkeditorAccordion(accordionEl);
       });
 
-      once('arcadia11-service-catalogue-ajax', '.view-service-catalogue', context).forEach(function (viewEl) {
+      once('arcadia11-service-catalogue-ajax', '[data-arcadia-service-catalogue-view="1"], .view-service-catalogue', context).forEach(function (viewEl) {
         initServiceCatalogueAjax(viewEl);
       });
 
@@ -640,9 +623,33 @@
     Array.prototype.slice.call(document.querySelectorAll('dl.ckeditor-accordion')).forEach(function (el) {
       initLegacyCkeditorAccordion(el);
     });
-    Array.prototype.slice.call(document.querySelectorAll('.view-service-catalogue')).forEach(function (el) {
+    Array.prototype.slice.call(document.querySelectorAll('[data-arcadia-service-catalogue-view="1"], .view-service-catalogue')).forEach(function (el) {
       initServiceCatalogueAjax(el);
     });
+
+    if (!window.arcadiaServiceCatalogueDelegatedClickInitialized) {
+      document.addEventListener('click', function (event) {
+        var link = event.target.closest('.arcadia-service-catalogue-filter__item');
+        if (!link) {
+          return;
+        }
+        var viewEl = findServiceCatalogueView(link);
+        if (!viewEl) {
+          return;
+        }
+        if (viewEl.dataset.serviceCatalogueAjaxInitialized === '1') {
+          return;
+        }
+        var url = link.getAttribute('href');
+        if (!url) {
+          return;
+        }
+        event.preventDefault();
+        initServiceCatalogueAjax(viewEl);
+        replaceServiceCatalogueContent(viewEl, url, true);
+      });
+      window.arcadiaServiceCatalogueDelegatedClickInitialized = true;
+    }
 
     document.addEventListener('click', function (event) {
       var trigger = event.target.closest('.panel-title a[data-toggle="collapse"]');

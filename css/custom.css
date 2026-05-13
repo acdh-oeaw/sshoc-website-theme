@@ -438,8 +438,9 @@ margin-bottom: 0;
 	background: #ff9e1b;
 }
 
-.view-service-catalogue.service-catalogue-page .view-content,
-.view-service-catalogue.service-catalogue-page .arcadia-service-catalogue-results {
+[data-arcadia-service-catalogue-view="1"] .view-content,
+[data-arcadia-service-catalogue-view="1"] .arcadia-service-catalogue-results,
+.view-service-catalogue .arcadia-service-catalogue-results {
 	display: grid;
 	grid-template-columns: repeat(2, minmax(0, 1fr));
 	column-gap: 0;
@@ -447,19 +448,22 @@ margin-bottom: 0;
 	margin-top: 30px;
 }
 
-.view-service-catalogue.service-catalogue-page .views-row,
-.view-service-catalogue.service-catalogue-page .arcadia-service-catalogue-row {
+[data-arcadia-service-catalogue-view="1"] .views-row,
+[data-arcadia-service-catalogue-view="1"] .arcadia-service-catalogue-row,
+.view-service-catalogue .arcadia-service-catalogue-row {
 	margin: 0;
 	padding: 0 38px;
 	border-left: 3px solid #ff9e1b;
 }
 
-.view-service-catalogue.service-catalogue-page .views-row:nth-child(2n),
-.view-service-catalogue.service-catalogue-page .arcadia-service-catalogue-row:nth-child(2n) {
+[data-arcadia-service-catalogue-view="1"] .views-row:nth-child(2n),
+[data-arcadia-service-catalogue-view="1"] .arcadia-service-catalogue-row:nth-child(2n),
+.view-service-catalogue .arcadia-service-catalogue-row:nth-child(2n) {
 	border-right: 0;
 }
 
-.view-service-catalogue.service-catalogue-page.is-loading {
+[data-arcadia-service-catalogue-view="1"].is-loading,
+.view-service-catalogue.is-loading {
 	opacity: 0.55;
 	pointer-events: none;
 	transition: opacity 160ms ease;
@@ -543,8 +547,9 @@ margin-bottom: 0;
 		grid-template-columns: repeat(2, minmax(0, 1fr));
 	}
 
-	.view-service-catalogue.service-catalogue-page .view-content,
-	.view-service-catalogue.service-catalogue-page .arcadia-service-catalogue-results {
+	[data-arcadia-service-catalogue-view="1"] .view-content,
+	[data-arcadia-service-catalogue-view="1"] .arcadia-service-catalogue-results,
+	.view-service-catalogue .arcadia-service-catalogue-results {
 		grid-template-columns: 1fr;
 	}
 }
@@ -555,8 +560,9 @@ margin-bottom: 0;
 		gap: 20px;
 	}
 
-	.view-service-catalogue.service-catalogue-page .views-row,
-	.view-service-catalogue.service-catalogue-page .arcadia-service-catalogue-row {
+	[data-arcadia-service-catalogue-view="1"] .views-row,
+	[data-arcadia-service-catalogue-view="1"] .arcadia-service-catalogue-row,
+	.view-service-catalogue .arcadia-service-catalogue-row {
 		padding: 0 0 0 20px;
 	}
 
