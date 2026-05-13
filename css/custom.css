@@ -2754,6 +2754,15 @@ article.contextual-region.node.node--type-news.node--view-mode-teaser .field-nam
   color: #ffffff;
 }
 
+.arcadia-publications-wp-filter {
+  margin-bottom: 30px;
+}
+
+.arcadia-publications-wp-filter__button {
+  min-width: 170px;
+  max-width: 360px;
+}
+
 @media (max-width: 991px) {
   .about-section-two .sidebar .arcadia-news-sidebar {
     margin-top: 24px;

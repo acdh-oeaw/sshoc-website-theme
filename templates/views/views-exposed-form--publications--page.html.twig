@@ -1,0 +1,16 @@
+{% if arcadia_publications_wp_filter_links %}
+  <div class="js-form-item form-item js-form-type-select form-type-select js-form-item-field-wp-tid form-item-field-wp-tid">
+    <div class="arcadia-training-events-filter arcadia-publications-wp-filter" role="group" aria-label="WP filter">
+      {% for item in arcadia_publications_wp_filter_links %}
+        <a class="arcadia-training-events-filter__button arcadia-publications-wp-filter__button{{ item.active ? ' is-active' }}" href="{{ item.url }}" aria-pressed="{{ item.active ? 'true' : 'false' }}">
+          {{ item.title }}
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+  <div class="arcadia-publications-wp-filter__form visually-hidden">
+    {{ form }}
+  </div>
+{% else %}
+  {{ form }}
+{% endif %}

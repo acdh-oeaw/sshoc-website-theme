@@ -199,9 +199,15 @@ function arcadia11_preprocess_views_exposed_form(array &$variables): void {
   $form = $variables['form'] ?? [];
   $form_id = (string) ($form['#id'] ?? '');
   $variables['arcadia_service_catalogue_filter_links'] = [];
+  $variables['arcadia_publications_wp_filter_links'] = [];
 
   if (str_starts_with($form_id, 'views-exposed-form-service-catalogue-')) {
     $variables['arcadia_service_catalogue_filter_links'] = arcadia11_service_catalogue_filter_links();
+    return;
+  }
+
+  if ($form_id === 'views-exposed-form-publications-page' && !empty($form['field_wp_tid']['#options'])) {
+    $variables['arcadia_publications_wp_filter_links'] = arcadia11_exposed_filter_links('field_wp_tid', $form['field_wp_tid']['#options']);
     return;
   }
 
@@ -210,18 +216,29 @@ function arcadia11_preprocess_views_exposed_form(array &$variables): void {
     return;
   }
 
+  $variables['arcadia_training_event_filter_links'] = arcadia11_exposed_filter_links('field_tagging_target_id', $form['field_tagging_target_id']['#options']);
+}
+
+/**
+ * Builds toggle links for exposed multi-value select filters.
+ */
+function arcadia11_exposed_filter_links(string $identifier, array $options): array {
   $request = \Drupal::request();
   $current_query = $request->query->all();
   unset($current_query['page']);
+  $path = '/' . ltrim($request->getPathInfo(), '/');
+  if ($path === '/') {
+    $path = '/';
+  }
 
-  $selected = $current_query['field_tagging_target_id'] ?? [];
+  $selected = $current_query[$identifier] ?? [];
   if (!is_array($selected)) {
     $selected = [$selected];
   }
   $selected = array_map('strval', $selected);
 
   $links = [];
-  foreach ($form['field_tagging_target_id']['#options'] as $value => $label) {
+  foreach ($options as $value => $label) {
     if ((string) $value === '') {
       continue;
     }
@@ -238,20 +255,20 @@ function arcadia11_preprocess_views_exposed_form(array &$variables): void {
 
     $target_query = $current_query;
     if ($target_values === []) {
-      unset($target_query['field_tagging_target_id']);
+      unset($target_query[$identifier]);
     }
     else {
-      $target_query['field_tagging_target_id'] = array_values(array_unique($target_values));
+      $target_query[$identifier] = array_values(array_unique($target_values));
     }
 
     $links[] = [
       'title' => (string) $label,
-      'url' => Url::fromRoute('<current>', [], ['query' => $target_query])->toString(),
+      'url' => Url::fromUserInput($path, ['query' => $target_query])->toString(),
       'active' => $is_active,
     ];
   }
 
-  $variables['arcadia_training_event_filter_links'] = $links;
+  return $links;
 }
 
 /**
