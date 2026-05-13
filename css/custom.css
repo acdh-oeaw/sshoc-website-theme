@@ -438,7 +438,8 @@ margin-bottom: 0;
 	background: #ff9e1b;
 }
 
-.view-service-catalogue.service-catalogue-page .view-content {
+.view-service-catalogue.service-catalogue-page .view-content,
+.view-service-catalogue.service-catalogue-page .arcadia-service-catalogue-results {
 	display: grid;
 	grid-template-columns: repeat(2, minmax(0, 1fr));
 	column-gap: 0;
@@ -446,14 +447,22 @@ margin-bottom: 0;
 	margin-top: 30px;
 }
 
-.view-service-catalogue.service-catalogue-page .views-row {
+.view-service-catalogue.service-catalogue-page .views-row,
+.view-service-catalogue.service-catalogue-page .arcadia-service-catalogue-row {
 	margin: 0;
 	padding: 0 38px;
 	border-left: 3px solid #ff9e1b;
 }
 
-.view-service-catalogue.service-catalogue-page .views-row:nth-child(2n) {
+.view-service-catalogue.service-catalogue-page .views-row:nth-child(2n),
+.view-service-catalogue.service-catalogue-page .arcadia-service-catalogue-row:nth-child(2n) {
 	border-right: 0;
+}
+
+.view-service-catalogue.service-catalogue-page.is-loading {
+	opacity: 0.55;
+	pointer-events: none;
+	transition: opacity 160ms ease;
 }
 
 .catalogue-teaser-card {
@@ -534,7 +543,8 @@ margin-bottom: 0;
 		grid-template-columns: repeat(2, minmax(0, 1fr));
 	}
 
-	.view-service-catalogue.service-catalogue-page .view-content {
+	.view-service-catalogue.service-catalogue-page .view-content,
+	.view-service-catalogue.service-catalogue-page .arcadia-service-catalogue-results {
 		grid-template-columns: 1fr;
 	}
 }
@@ -545,7 +555,8 @@ margin-bottom: 0;
 		gap: 20px;
 	}
 
-	.view-service-catalogue.service-catalogue-page .views-row {
+	.view-service-catalogue.service-catalogue-page .views-row,
+	.view-service-catalogue.service-catalogue-page .arcadia-service-catalogue-row {
 		padding: 0 0 0 20px;
 	}
 
