@@ -206,8 +206,8 @@ function arcadia11_preprocess_views_exposed_form(array &$variables): void {
     return;
   }
 
-  if ($form_id === 'views-exposed-form-publications-page' && !empty($form['field_wp_tid']['#options'])) {
-    $variables['arcadia_publications_wp_filter_links'] = arcadia11_exposed_filter_links('field_wp_tid', $form['field_wp_tid']['#options']);
+  if ($form_id === 'views-exposed-form-publications-page') {
+    $variables['arcadia_publications_wp_filter_links'] = arcadia11_publications_wp_filter_links();
     return;
   }
 
@@ -222,7 +222,7 @@ function arcadia11_preprocess_views_exposed_form(array &$variables): void {
 /**
  * Builds toggle links for exposed multi-value select filters.
  */
-function arcadia11_exposed_filter_links(string $identifier, array $options): array {
+function arcadia11_exposed_filter_links(string $identifier, array $options, bool $multiple = TRUE): array {
   $request = \Drupal::request();
   $current_query = $request->query->all();
   unset($current_query['page']);
@@ -245,12 +245,17 @@ function arcadia11_exposed_filter_links(string $identifier, array $options): arr
 
     $value = (string) $value;
     $is_active = in_array($value, $selected, TRUE);
-    $target_values = $selected;
-    if ($is_active) {
-      $target_values = array_values(array_diff($target_values, [$value]));
+    if (!$multiple) {
+      $target_values = $is_active ? [] : [$value];
     }
     else {
-      $target_values[] = $value;
+      $target_values = $selected;
+      if ($is_active) {
+        $target_values = array_values(array_diff($target_values, [$value]));
+      }
+      else {
+        $target_values[] = $value;
+      }
     }
 
     $target_query = $current_query;
@@ -269,6 +274,50 @@ function arcadia11_exposed_filter_links(string $identifier, array $options): arr
   }
 
   return $links;
+}
+
+/**
+ * Builds WP filter links from WP terms actually referenced by deliverables.
+ */
+function arcadia11_publications_wp_filter_links(): array {
+  $connection = \Drupal::database();
+  if (!$connection->schema()->tableExists('node__field_wp')) {
+    return [];
+  }
+
+  $term_ids = $connection->select('node__field_wp', 'wp')
+    ->distinct()
+    ->fields('wp', ['field_wp_target_id'])
+    ->condition('wp.bundle', 'deliverable')
+    ->condition('wp.deleted', 0)
+    ->isNotNull('wp.field_wp_target_id')
+    ->execute()
+    ->fetchCol();
+
+  $term_ids = array_values(array_filter(array_map('intval', $term_ids)));
+  if ($term_ids === []) {
+    return [];
+  }
+
+  $terms = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadMultiple($term_ids);
+  uasort($terms, static function ($a, $b): int {
+    return arcadia11_wp_sort_weight($a->label()) <=> arcadia11_wp_sort_weight($b->label())
+      ?: strcasecmp($a->label(), $b->label());
+  });
+
+  $options = [];
+  foreach ($terms as $term) {
+    $options[(string) $term->id()] = $term->label();
+  }
+
+  return arcadia11_exposed_filter_links('field_wp_tid', $options, FALSE);
+}
+
+function arcadia11_wp_sort_weight(string $label): int {
+  if (preg_match('/\bWP\s*([0-9]+)/i', $label, $matches)) {
+    return (int) $matches[1];
+  }
+  return 999;
 }
 
 /**
