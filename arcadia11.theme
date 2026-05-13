@@ -177,6 +177,20 @@ function arcadia11_preprocess_views_view_fields(array &$variables): void {
 }
 
 /**
+ * Implements hook_preprocess_views_view().
+ */
+function arcadia11_preprocess_views_view(array &$variables): void {
+  $view = $variables['view'] ?? NULL;
+  $variables['arcadia_service_catalogue_filter_links'] = [];
+
+  if (!$view || $view->id() !== 'service_catalogue') {
+    return;
+  }
+
+  $variables['arcadia_service_catalogue_filter_links'] = arcadia11_service_catalogue_filter_links();
+}
+
+/**
  * Implements hook_preprocess_views_exposed_form().
  */
 function arcadia11_preprocess_views_exposed_form(array &$variables): void {
